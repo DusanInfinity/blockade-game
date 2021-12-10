@@ -1,2 +1,2 @@
-# vi-projekat
+# Projekat 'Blockade'
 Veštačka inteligencija - Blockade
