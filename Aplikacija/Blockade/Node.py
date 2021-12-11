@@ -1,30 +1,29 @@
+from FieldTypes import FieldType
 
 class Node:
-    def __init__(self, x, y, char):
-        self.char = char
-        self.x = x
-        self.y = y
+    def __init__(self, row, column, type):
+        self.type = type
+        self.row = row
+        self.column = column
 
     def isWall(self):
-        if self.izgled == '=' or self.izgled == 'ǁ':
+        if self.type == FieldType.HORIZONTAL_WALL_FULL or self.type == FieldType.VERTICAL_WALL_FULL:
             return True
 
     def setWall(self, pravac):
-        if pravac == 'V': # Vodoradno
-            self.char = '='
+        if pravac == 'V': # Vertikalno
+            self.type = FieldType.VERTICAL_WALL_FULL;
         else: # pravac == 'H'  # Horizontalno 
-            self.char = 'ǁ'
+            self.type = FieldType.HORIZONTAL_WALL_FULL;
         pass
         
 
     def isPlayerNode(self):
-        if self.x % 2 == 1 and self.y % 2 == 1:
+        if self.row % 2 == 0 and self.column % 2 == 0:
             return True
         else:
             return False
 
-    def setPlayer(self, x, y, znak):
-        self.char = znak
-        self.x = x
-        self.y = y
+    def changeType(self, type):
+        self.type = type
     

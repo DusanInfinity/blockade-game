@@ -22,6 +22,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Blockade.py" />
+    <Compile Include="Node.py" />
+    <Compile Include="Player.py" />
+    <Compile Include="FieldTypes.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Table.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

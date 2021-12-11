@@ -1,22 +1,32 @@
 from Node import Node
+from FieldTypes import FieldType
 
 
 class Player:
-    def __init__(self, znak, x, y, board):
-        self.znak = znak
-        self.x = x
-        self.y = y
+    def __init__(self, type, row, column, board):
+        self.type = type
+        self.row = row
+        self.column = column
         self.board = board
         self.zidovi = 0
 
-    def postaviIgracaNaTabli(self, x, y, z = None):
-        self.board.board[x * 2][y * 2].setPlayer(x * 2, y * 2, self.znak if z == None else " ")
+    # NAPOMENA: POLJA NA TABLI POCINJU OD 1,1 dok u matrici indeksi pocinju od 0,0
+    def postaviIgracaNaTabli(self):
+        row = (self.row - 1) * 2;
+        column = (self.column - 1) * 2;
+        self.board.matrix[row][column].changeType(self.type)
 
+    def removePlayerFromCurrentPosition(self):
+        row = (self.row - 1) * 2;
+        column = (self.column - 1) * 2;
+        self.board.matrix[row][column].changeType(FieldType.EMPTY)
+
+    # NAPOMENA - ZA DOBRIJA: Ovde sam ostavio x i y jer si mozda radio po koordinatama a ne po vrstama i kolonama
     def setPlayerCordinates(self, x, y):
-        self.postaviIgracaNaTabli(self.x, self.y, '')
-        self.x = x
-        self.y = y
-        self.postaviIgracaNaTabli(self.x, self.y)
+        self.removePlayerFromCurrentPosition() # brisanje igraca sa stare pozicije
+        self.row = y
+        self.column = x
+        self.postaviIgracaNaTabli()
 
     def movePlayer(self, x, y):
         if self.validateMoveForBoardDimensions(x, y) and self.validateMoveForWalls(x, y):
@@ -25,7 +35,7 @@ class Player:
             pass
 
     def validateMoveForBoardDimensions(self, x, y):
-        if x < 0 or x > self.board.width or y < 0 or y > self.board.length:
+        if x < 0 or x > self.board.m or y < 0 or y > self.board.n:
             return False
         return True
 
@@ -37,51 +47,3 @@ class Player:
         # Ne mozemo da preskocimo zid
         return True
         pass
-
-
-
-
-class Board:
-    def __init__(self, length, width) -> None:
-        self.length = length
-        self.width = width
-        self.board = []
-        self.players = []
-
-    def postaviTablu(self):
-        for i in range(self.length * 2 - 1):
-            self.board.append([])
-            for j in range(self.width * 2 - 1):
-                if i % 2 == 0:
-                    if j % 2 == 1:
-                        self.board[i].append(Node(i, j, "|"))
-                    else:
-                        self.board[i].append(Node(i, j, " "))
-                else:
-                    if j % 2 == 0:
-                        self.board[i].append(Node(i, j, "-"))
-                    else:
-                        self.board[i].append(Node(i, j, " "))
-
-    def iscrtajTablu(self):
-        for i in range(self.length * 2 - 1):
-            for j in range(self.width * 2 - 1):
-                print(self.board[i][j].char, end="")
-            print("")
-        print("")
-
-    def postaviIgrace(self):
-        self.players.append(Player("X", 3, 3, self))
-        self.players.append(Player("X", 7, 3, self))
-        self.players.append(Player("O", 3, 10, self))
-        self.players.append(Player("O", 7, 10, self))
-        for p in self.players:
-            p.postaviIgracaNaTabli(p.x, p.y)
-
-
-board = Board(11, 14)
-board.postaviTablu()
-board.postaviIgrace()
-board.iscrtajTablu()
-board.players[1].movePlayer(5, 5)
-board.iscrtajTablu()
