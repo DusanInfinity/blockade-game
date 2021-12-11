@@ -74,4 +74,29 @@ class Table:
 		j = (column - 1) * 2;
 		return self.matrix[i][j];
 
+	def isGameFinished(self):
+		for p in self.players:
+			if p.isWinner():
+				return True;
+		return False;
+
+	def requestInputForPosition(self, sign, seqNumber):
+		i = -1
+		j = -1
+		while(i < 1 or i > self.n or j < 1 or j > self.m):
+			if i != -1 and (i < 1 or i > self.n):
+				print(f'[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.n}. Vi ste uneli: ' + str(i));
+			if j != -1 and (j < 1 or j > self.m): 
+				print(f'[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.m}. Vi ste uneli: ' + str(j));
+
+			print(f'Unesite poziciju za {seqNumber}. figuru igrača {sign} [Format: vrsta kolona (primer: 3 5)]: ', end = "");
+			unos = input().split(" ")
+			if len(unos) == 2 and unos[0].isnumeric() and unos[1].isnumeric():
+				# TO-DO provera da li je polje vec zauzeto
+				i = int(unos[0])
+				j = int(unos[1])
+			
+		print(f'[{sign}({seqNumber})] Uneli ste poziciju ({i}, {j}).');
+		return (i, j);
+
 

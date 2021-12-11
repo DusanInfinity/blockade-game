@@ -20,20 +20,20 @@ class Player:
         field.changeType(FieldType.EMPTY)
 
     # NAPOMENA - ZA DOBRIJA: Ovde sam ostavio x i y jer si mozda radio po koordinatama a ne po vrstama i kolonama
-    def setPlayerCordinates(self, x, y):
+    def updatePlayerCoordinates(self, x, y):
         self.removePlayerFromCurrentPosition() # brisanje igraca sa stare pozicije
-        self.row = y
-        self.column = x
+        self.row = x
+        self.column = y
         self.setPlayerOnTable()
 
     def movePlayer(self, x, y):
         if self.validateMoveForBoardDimensions(x, y) and self.validateMoveForWalls(x, y):
-            self.setPlayerCordinates(x, y)
+            self.updatePlayerCoordinates(x, y)
         else:
             pass
 
     def validateMoveForBoardDimensions(self, x, y):
-        if x < 0 or x > self.board.m or y < 0 or y > self.board.n:
+        if x < 0 or x > self.board.n or y < 0 or y > self.board.m:
             return False
         return True
 
@@ -45,3 +45,7 @@ class Player:
         # Ne mozemo da preskocimo zid
         return True
         pass
+
+    # TO-DO provera da li je igrac pobednik (Kraj je kada je pešak na protivničkom početnom polju)
+    def isWinner(self):
+        return False;
