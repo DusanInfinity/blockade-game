@@ -1,7 +1,7 @@
 from Table import Table
 from FieldTypes import FieldType
 
-t = Table(10, 10)
+t = Table(10, 14)
 
 t.printTable()
 t.createPlayer(FieldType.X, 3, 3);

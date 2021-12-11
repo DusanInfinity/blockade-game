@@ -1,4 +1,4 @@
-from Node import Node
+from Field import Field
 from FieldTypes import FieldType
 
 
@@ -11,22 +11,20 @@ class Player:
         self.zidovi = 0
 
     # NAPOMENA: POLJA NA TABLI POCINJU OD 1,1 dok u matrici indeksi pocinju od 0,0
-    def postaviIgracaNaTabli(self):
-        row = (self.row - 1) * 2;
-        column = (self.column - 1) * 2;
-        self.board.matrix[row][column].changeType(self.type)
+    def setPlayerOnTable(self):
+        field = self.board.getFieldByRowAndColumn(self.row, self.column);
+        field.changeType(self.type)
 
     def removePlayerFromCurrentPosition(self):
-        row = (self.row - 1) * 2;
-        column = (self.column - 1) * 2;
-        self.board.matrix[row][column].changeType(FieldType.EMPTY)
+        field = self.board.getFieldByRowAndColumn(self.row, self.column);
+        field.changeType(FieldType.EMPTY)
 
     # NAPOMENA - ZA DOBRIJA: Ovde sam ostavio x i y jer si mozda radio po koordinatama a ne po vrstama i kolonama
     def setPlayerCordinates(self, x, y):
         self.removePlayerFromCurrentPosition() # brisanje igraca sa stare pozicije
         self.row = y
         self.column = x
-        self.postaviIgracaNaTabli()
+        self.setPlayerOnTable()
 
     def movePlayer(self, x, y):
         if self.validateMoveForBoardDimensions(x, y) and self.validateMoveForWalls(x, y):

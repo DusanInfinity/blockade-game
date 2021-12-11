@@ -1,4 +1,4 @@
-from Node import Node
+from Field import Field
 from FieldTypes import FieldType
 from Player import Player
 
@@ -9,30 +9,25 @@ class Table:
 		self.n = n;
 		self.m = m;
 		self.matrixRows = 2*n - 1;
-		self.matrixColumns = 2*n - 1;
+		self.matrixColumns = 2*m - 1;
 		self.matrix = [];
-		self.initNodes();
+		self.initFields();
 		self.players = [];
 
-	def initNodes(self):
+	def initFields(self):
 		for i in range(self.matrixRows):
 			self.matrix.append([])
 			for j in range(self.matrixColumns):
 				if i % 2 == 0:
 					if j % 2 == 0:
-						self.matrix[i].append(Node(i, j, FieldType.EMPTY))
+						self.matrix[i].append(Field(i, j, FieldType.EMPTY))
 					else:
-						self.matrix[i].append(Node(i, j, FieldType.VERTICAL_WALL_EMPTY))
+						self.matrix[i].append(Field(i, j, FieldType.VERTICAL_WALL_EMPTY))
 				else:
 					if j % 2 == 0:
-						self.matrix[i].append(Node(i, j, FieldType.HORIZONTAL_WALL_EMPTY))
+						self.matrix[i].append(Field(i, j, FieldType.HORIZONTAL_WALL_EMPTY))
 					else:
-						self.matrix[i].append(Node(i, j, FieldType.EMPTY))
-
-
-	def getSymbol(self, node):
-		type = node.type;
-		return "X" if type == FieldType.X else "O" if type == FieldType.O else " | " if type == FieldType.VERTICAL_WALL_EMPTY else "---" if type == FieldType.HORIZONTAL_WALL_EMPTY else " ǁ " if type == FieldType.VERTICAL_WALL_FULL else "===" if type == FieldType.HORIZONTAL_WALL_FULL else " "; 
+						self.matrix[i].append(Field(i, j, FieldType.EMPTY))
 
 	def printTable(self):
 		n = self.n;
@@ -46,20 +41,20 @@ class Table:
 		print("   ", end = "");
 		print(*["===" for i in range(m)], sep = " ");
 
-		for row in range(0, n):
+		for row in range(n):
 			toPrint = f'{self.fieldMarks[row]} ǁ '
 
 			i = row * 2
-			for j in range(0, self.matrixColumns):
-				toPrint += f'{self.getSymbol(self.matrix[i][j])}';
+			for j in range(self.matrixColumns):
+				toPrint += self.matrix[i][j].getSymbol();
 
 			toPrint += f' ǁ {self.fieldMarks[row]}';
 
 			i += 1;
 			if i < self.matrixRows:
 				toPrint += "\n   ";
-				for j in range(0, self.matrixColumns):
-					toPrint += f'{self.getSymbol(self.matrix[i][j])}';
+				for j in range(self.matrixColumns):
+					toPrint += self.matrix[i][j].getSymbol();
 			
 			print(toPrint);
 			
@@ -72,6 +67,11 @@ class Table:
 	def createPlayer(self, type, row, column):
 		newPlayer = Player(type, row, column, self);
 		self.players.append(newPlayer)
-		newPlayer.postaviIgracaNaTabli()
+		newPlayer.setPlayerOnTable()
+
+	def getFieldByRowAndColumn(self, row, column):
+		i = (row - 1) * 2;
+		j = (column - 1) * 2;
+		return self.matrix[i][j];
 
 
