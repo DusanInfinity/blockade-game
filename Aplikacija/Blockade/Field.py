@@ -1,10 +1,11 @@
 from FieldTypes import FieldType
 
 class Field:
-	def __init__(self, i, j, type):
+	def __init__(self, i, j, type, board):
 		self.type = type
 		self.i = i
 		self.j = j
+		self.board = board
 
 	def getSymbol(self):
 		type = self.type
@@ -21,13 +22,30 @@ class Field:
 			return True
 		return False
 
-	def setWall(self, pravac):
-		if pravac == 'V': # Vertikalno
-			self.type = FieldType.VERTICAL_WALL_FULL;
-		else: # pravac == 'H'  # Horizontalno 
-			self.type = FieldType.HORIZONTAL_WALL_FULL;
-		pass
-		
+	def setWall(self, boja):
+		#treba provera da se uradi da li se prolazi kroz zid
+
+		if self.isWall():
+			print("Vec posotoji zid na ovoj poziciji")
+		else:
+			if boja == 'p': # Plavo - horizonalno
+				self.type = FieldType.HORIZONTAL_WALL_FULL
+			else: # pravac == 'Z'  # Zeleno - vertikalno
+				self.type = FieldType.VERTICAL_WALL_FULL
+	
+	def areWallsCrossing(self, color):
+		if color == 'p':
+			if (self.board.matrix[self.i - 1][self.j + 1].isWall() 
+			and self.board.matrix[self.i + 1][self.j + 1].isWall()):
+				return True
+			else:
+				return False
+		else:
+			if (self.board.matrix[self.i + 1][self.j - 1].isWall() 
+			and self.board.matrix[self.i + 1][self.j + 1].isWall()):
+				return True
+			else:
+				return False
 
 	def isFieldForPlayer(self):
 		if self.i % 2 == 0 and self.j % 2 == 0:
