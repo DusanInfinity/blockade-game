@@ -95,6 +95,7 @@ class Player:
                 j = newWallPosAndColor[2]
                 if self.board.putWallOnPosition(color, i, j):
                     status = PlayStatus.WALL_PLACED
+                    self.remainingWalls -= 1
                     self.board.printTable()
         
 

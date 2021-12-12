@@ -74,7 +74,7 @@ if not debugMode:
 
 else:
 	t = Table(10, 14)
-	wallsNum = 3
+	wallsNum = 2
 	t.printTable()
 	t.createPlayer(FieldType.X, 4, 4, wallsNum)
 	t.createPlayer(FieldType.X, 7, 4, wallsNum)
