@@ -64,8 +64,8 @@ class Table:
 		print(*self.fieldMarks[:m], sep = "   ")
 		print(f'\nN = {n}, M = {m}', end = "\n\n")
 
-	def createPlayer(self, type, row, column):
-		newPlayer = Player(type, row, column, self)
+	def createPlayer(self, type, row, column, wallsNum):
+		newPlayer = Player(type, row, column, wallsNum, self)
 		self.players.append(newPlayer)
 		newPlayer.setPlayerOnTable()
 
@@ -93,7 +93,18 @@ class Table:
 				return None
 		else:
 			return None
-
+	def putWallOnPosition(self, color, i, j):
+		field = self.getFieldForWall(i, j, color)
+		if field != None and len(field) > 0:
+			if field[0].isWall() or field[1].isWall() or field[0].areWallsCrossing(color):
+				print("[GRESKA] Već posotoji zid na toj poziciji!")
+			else:
+				for f in field:
+					f.setWall(color)
+				return True
+		else:
+			print("[GRESKA] Ne možete postaviti zid na tu poziciju!")
+		return False
 
 	def isGameFinished(self):
 		for p in self.players:
@@ -132,34 +143,19 @@ class Table:
 		color = ''
 		i = -1
 		j = -1
-		while(i < 1 or i > self.n or j < 1 or j > self.m or len(color) < 1):
-			# TO-DO: treba da se uradi provera za unesenu boju zida
-			# if color != '' and (color != 'p' or color != 'z'):
-			# 	print(f'[GRESKA] Uneli ste neodgovarajucu boju za zid, pokusajte ponovo za karaktere [p, z]')
-			# 	continue
+		while(i < 1 or i > self.n or j < 1 or j > self.m or color != 'p' and color != 'z'):
+			if color != '' and color != 'p' and color != 'z':
+				print(f'[GRESKA] Uneli ste nevalidnu boju za zid. Dozvoljene boje: p(plava) i z(zelena). Vi ste uneli: ' + str(color))
 			if i != -1 and (i < 1 or i > self.n):
 				print(f'[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.n}. Vi ste uneli: ' + str(i))
 			if j != -1 and (j < 1 or j > self.m): 
 				print(f'[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.m}. Vi ste uneli: ' + str(j))
 
-			print(f'Unesite poziciju za zid igrača {sign} [Format: boja (p ili z) vrsta kolona (primer: p 6 5)]: ', end = "")
+			print(f'Unesite poziciju za zid igrača {sign} [Format: boja(p ili z) vrsta kolona (primer: p 6 5)]: ', end = "")
 			unos = input().split(" ")
-			if len(unos) == 3 and len(unos[0]) == 1 and unos[1].isnumeric() and unos[2].isnumeric():
+			if len(unos) == 3:
 				color = unos[0]
-				i = int(unos[1])
-				j = int(unos[2])
-				field = self.getFieldForWall(i, j, color)
-				if field != None and len(field) > 0:
-					if field[0].isWall() or field[1].isWall() or field[0].areWallsCrossing(color):
-						print("Vec posotoji zid na ovoj poziciji")
-						i = -1
-						j = -1
-						color = ''
-					else:
-						for f in field:
-							f.setWall(color)
-				else:
-					print("Ne moze se uneti zid na tu poziciju")
-					i = -1
-					j = -1
-					color = ''
+				i = self.parseEnteredValueToTableIndex(unos[1])
+				j = self.parseEnteredValueToTableIndex(unos[2])
+		print(f'[{sign} - ZID] Uneli ste poziciju ({i}, {j}), boja: {color}')
+		return (color, i, j)

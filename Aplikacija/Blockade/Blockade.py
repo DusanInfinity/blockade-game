@@ -60,35 +60,34 @@ if not debugMode:
 		type = FieldType.X if sign == 'X' else FieldType.O
 		for i in range(2):
 			spawn = table.requestInputForPlayerPosition(sign, i)
-			table.createPlayer(type, spawn[0], spawn[1])
+			table.createPlayer(type, spawn[0], spawn[1], chosenWallsNum)
 
 	print(f'Uneli ste sve parametre, igra počinje!')
 
 	table.printTable()
 
-	while(table.isGameFinished() is not True):
-		newPosX1 = table.requestInputForPlayerPosition('X', 1)
-		table.players[0].movePlayer(newPosX1[0], newPosX1[1])
-		table.printTable()
+	currentPlayer = 0
+	while(t.isGameFinished() is not True):
+		t.players[currentPlayer].play()
+		currentPlayer = 2 if currentPlayer == 0 else 0
 
 
 else:
-	t = Table(22, 28)
-
+	t = Table(10, 14)
+	wallsNum = 3
 	t.printTable()
-	t.createPlayer(FieldType.X, 4, 4)
-	t.createPlayer(FieldType.X, 7, 4)
-	t.createPlayer(FieldType.O, 4, 10)
-	t.createPlayer(FieldType.O, 7, 10)
+	t.createPlayer(FieldType.X, 4, 4, wallsNum)
+	t.createPlayer(FieldType.X, 7, 4, wallsNum)
+	t.createPlayer(FieldType.O, 4, 10, wallsNum)
+	t.createPlayer(FieldType.O, 7, 10, wallsNum)
 	t.printTable()
 	#t.players[2].movePlayer(7, 4)
 	t.printTable()
 
+	currentPlayer = 0
 	while(t.isGameFinished() is not True):
-		newPosX1 = t.requestInputForPlayerPosition('X', 1)
-		t.players[0].movePlayer(newPosX1[0], newPosX1[1])
-		t.requestInputForWallPosition('X')
-		t.printTable()
+		t.players[currentPlayer].play()
+		currentPlayer = 2 if currentPlayer == 0 else 0
 
 
 

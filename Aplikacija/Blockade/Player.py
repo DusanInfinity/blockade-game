@@ -1,17 +1,18 @@
 from typing import Collection
 from Field import Field
 from FieldTypes import FieldType
+from FieldTypes import PlayStatus
 
 
 class Player:
-    def __init__(self, type, row, column, board):
+    def __init__(self, type, row, column, remainingWalls, board):
         self.type = type
         self.startingRow = row
         self.startingColumn = column
         self.row = row
         self.column = column
         self.board = board
-        self.zidovi = 0
+        self.remainingWalls = remainingWalls
 
     # NAPOMENA: POLJA NA TABLI POCINJU OD 1,1 dok u matrici indeksi pocinju od 0,0
     def setPlayerOnTable(self):
@@ -76,3 +77,24 @@ class Player:
                 if self.row == p.startingRow and self.column == p.startingColumn:
                     return True
         return False
+
+    def play(self):
+        # TO-DO biranje pesaka (1 ili 2) - kada se napravi posebna klasa
+        status = PlayStatus.START
+        while status != PlayStatus.MOVED:
+            newPos = self.board.requestInputForPlayerPosition(self.type.name, 1)
+            if self.movePlayer(newPos[0], newPos[1]):
+                status = PlayStatus.MOVED
+                self.board.printTable()
+        if self.remainingWalls > 0:
+            status = PlayStatus.PLACING_WALL
+            while status != PlayStatus.WALL_PLACED:
+                newWallPosAndColor = self.board.requestInputForWallPosition(self.type.name)
+                color = newWallPosAndColor[0]
+                i = newWallPosAndColor[1]
+                j = newWallPosAndColor[2]
+                if self.board.putWallOnPosition(color, i, j):
+                    status = PlayStatus.WALL_PLACED
+                    self.board.printTable()
+        
+
