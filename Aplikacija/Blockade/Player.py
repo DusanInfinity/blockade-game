@@ -1,7 +1,7 @@
 from typing import Collection
 from Field import Field
-from FieldTypes import FieldType
-from FieldTypes import PlayStatus
+from Enums import FieldType
+from Enums import PlayStatus
 
 
 class Player:
@@ -34,14 +34,14 @@ class Player:
         if not self.validateMoveForBoardDimensions(x, y):
             print("[GRESKA] Uneta pozicija nije u granicama table!")
             return False
-        if not self.validateMoveForWalls(x, y):
-            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!")
-            return False
         if not self.validateMoveDirection(x, y):
             print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju!")
             return False
         if not self.validateMoveForOtherPijuns(x, y):
             print("[GRESKA] Ne mozete pomeriti pijuna, vec se nalazi pijun na toj poziciji")
+            return False
+        if not self.validateMoveForWalls(x, y):
+            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!")
             return False
         self.updatePlayerCoordinates(x, y)
         print(f'Uspešno ste pomerili pijuna na poziciju ({x}, {y}).')
@@ -69,9 +69,154 @@ class Player:
                 return False
                 
     def validateMoveForWalls(self, x, y):
-        # Da li su zidovi na putanji ka kojoj zelimo da idemo,
-        # Ne mozemo da preskocimo zid
+        """
+        
+            Ne mozemo da preskocimo zid
+        
+        """
+
+        print(self.row, self.column)
+        print(x, y)
+
+        if self.row == x or self.column == y: # AKO IDE GORE DOLE LEVO DESNO
+            if abs(self.row - x) > 0: # razlika izmedju ta dva argumenta mora da bude 2 ili 0
+                if self.row < x: # treba da ide dole
+                    if (self.board.matrix[(self.row - 1) * 2 + 1][(self.column - 1) * 2].isWall()
+                        or self.board.matrix[self.row * 2 + 1][(self.column - 1) * 2].isWall()
+                    ):
+                        return False
+                elif self.row > x: # treba da ide gore
+                    if (self.board.matrix[(self.row - 1) * 2 - 1][(self.column - 1) * 2].isWall()
+                        or self.board.matrix[(self.row - 2) * 2 - 1][(self.column - 1) * 2].isWall()
+                    ):
+                        return False
+            elif abs(self.column - y) > 0:
+                if self.column < y: # treba da ide desno
+                    if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 + 1].isWall()
+                        or self.board.matrix[(self.row - 1) * 2][self.column * 2 + 1].isWall()
+                    ):
+                        return False
+                elif self.column > y: # treba da ide levo
+                    if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 - 1].isWall()
+                        or self.board.matrix[(self.row - 1) * 2][(self.column - 2) * 2 - 1].isWall()
+                    ):
+                        return False
+
+        elif abs(self.row - x) == abs(self.column - y): # ide dijagonalno
+            print("doso ovde 1")
+            if self.row > x and self.column > y: # gore-levo
+                if self.diagonalMoveUpLeft(x, y):
+                    print("doso ovde UpLeft")
+                    return False
+            elif self.row > x and self.column < y: # gore-desno
+                if self.diagonalMoveUpRight(x, y):
+                    print("doso ovde UpRight")
+                    return False
+            elif self.row < x and self.column > y: # dole-levo
+                if self.diagonalMoveDownLeft(x, y):
+                    print("doso ovde DownLeft")
+                    return False
+            elif self.row < x and self.column < y: # dole-desno
+                if self.diagonalMoveDownRight(x, y):
+                    print(self.diagonalMoveDownRight(x, y))
+                    print("doso ovde DownRight")
+                    return False
+
         return True
+
+    def diagonalMoveUpLeft(self, x, y):
+        """
+        TO-DO napravi jednu for petlju koja ce da koristi ove mogucnosti umesto hardkodiranja
+        """
+        x_possibilities = [-1, 0, -1, -2]
+        y_possibilities = [0, -1, -2, -1]
+        
+        count = 0
+
+        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 - 1].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2 - 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 - 2][(y - 1) * 2 - 1].isWall():
+            count += 1
+
+        if count > 1:
+            return False
+        else:
+            return True
+
+
+    def diagonalMoveUpRight(self, x, y):
+        """
+        TO-DO napravi jednu for petlju koja ce da koristi ove mogucnosti umesto hardkodiranja
+        """
+        x_possibilities = [-1, 0, -1, -2]
+        y_possibilities = [0, 1, 2, 1]
+
+        count = 0
+
+        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 + 1].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2 + 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 - 2][(y - 1) * 2 + 1].isWall():
+            count += 1
+
+        if count > 1:
+            return False
+        else:
+            return True
+
+    def diagonalMoveDownLeft(self, x, y):
+        """
+        TO-DO napravi jednu for petlju koja ce da koristi ove mogucnosti umesto hardkodiranja
+        """
+        x_possibilities = [-1, 0, 1, 2]
+        y_possibilities = [0, -1, -2, -1]
+        
+        count = 0
+
+        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 - 1].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2 - 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 + 2][(y - 1) * 2 - 1].isWall():
+            count += 1
+
+        if count > 1:
+            return False
+        else:
+            return True
+    
+    def diagonalMoveDownRight(self, x, y):
+        """
+        TO-DO napravi jednu for petlju koja ce da koristi ove mogucnosti umesto hardkodiranja
+        """
+        x_possibilities = [-1, 0, 1, 2]
+        y_possibilities = [0, 1, 2, 1]
+        
+        count = 0
+
+        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 + 1].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2 + 2].isWall():
+            count += 1
+        if self.board.matrix[(x - 1) * 2 + 2][(y - 1) * 2 + 1].isWall():
+            count += 1
+
+        if count > 1:
+            return False
+        else:
+            return True
+    
 
     def validateMoveForOtherPijuns(self, x, y):
         for p in self.board.players:

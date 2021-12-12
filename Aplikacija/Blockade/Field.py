@@ -1,4 +1,4 @@
-from FieldTypes import FieldType
+from Enums import FieldType
 
 class Field:
 	def __init__(self, i, j, type, board):

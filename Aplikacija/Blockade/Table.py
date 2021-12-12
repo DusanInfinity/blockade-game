@@ -1,5 +1,5 @@
 from Field import Field
-from FieldTypes import FieldType
+from Enums import FieldType
 from Player import Player
 
 class Table:
@@ -93,6 +93,8 @@ class Table:
 				return None
 		else:
 			return None
+
+		
 	def putWallOnPosition(self, color, i, j):
 		field = self.getFieldForWall(i, j, color)
 		if field != None and len(field) > 0:

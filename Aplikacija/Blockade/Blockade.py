@@ -1,5 +1,5 @@
 from Table import Table
-from FieldTypes import FieldType
+from Enums import FieldType
 
 def requestInputForSign():
 	chosenSign = -1
