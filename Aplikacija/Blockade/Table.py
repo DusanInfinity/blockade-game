@@ -1,6 +1,7 @@
 from Field import Field
 from Enums import FieldType
 from Player import Player
+from Pawn import Pawn
 
 class Table:
 	fieldMarks = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] + list((chr(i) for i in range(65, 84))) # Brojevi(9) + 17 slova => 28 karaktera
@@ -12,7 +13,12 @@ class Table:
 		self.matrixColumns = 2*m - 1
 		self.matrix = []
 		self.initFields()
-		self.players = []
+		self.playerX = None
+		self.playerO = None
+
+	def createPlayers(self, wallsNum):
+		self.playerX = Player(FieldType.X, wallsNum, self)
+		self.playerO = Player(FieldType.O, wallsNum, self)
 
 	def initFields(self):
 		for i in range(self.matrixRows):
@@ -64,11 +70,6 @@ class Table:
 		print(*self.fieldMarks[:m], sep = "   ")
 		print(f'\nN = {n}, M = {m}', end = "\n\n")
 
-	def createPlayer(self, type, row, column, wallsNum):
-		newPlayer = Player(type, row, column, wallsNum, self)
-		self.players.append(newPlayer)
-		newPlayer.setPlayerOnTable()
-
 	def getFieldByRowAndColumn(self, row, column):
 		i = (row - 1) * 2
 		j = (column - 1) * 2
@@ -109,10 +110,12 @@ class Table:
 		return False
 
 	def isGameFinished(self):
-		for p in self.players:
-			if p.isWinner():
-				print(f"~~~~~~~~ {p.type.name} is WINNER!! ~~~~~~~~")
-				return True
+		if self.playerX.isWinner(self.playerO):
+			print(f"~~~~~~~~ X is WINNER!! ~~~~~~~~")
+			return True
+		elif self.playerO.isWinner(self.playerX):
+			print(f"~~~~~~~~ O is WINNER!! ~~~~~~~~")
+			return True
 		return False
 
 	def parseEnteredValueToTableIndex(self, str):

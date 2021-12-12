@@ -24,7 +24,10 @@
     <Compile Include="Blockade.py" />
     <Compile Include="Enums.py" />
     <Compile Include="Field.py" />
-    <Compile Include="Player.py" />
+    <Compile Include="Player.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pawn.py" />
     <Compile Include="Table.py">
       <SubType>Code</SubType>
     </Compile>
