@@ -60,7 +60,7 @@ if not debugMode:
 	players = { 'X': table.playerX, 'O': table.playerO }
 	for sign in ['X', 'O']:
 		for i in range(2):
-			spawn = table.requestInputForPlayerPosition(sign, i)
+			spawn = table.requestInputForPlayerPosition(sign, i+1)
 			players[sign].createPawn(spawn[0], spawn[1])
 
 	print(f'Uneli ste sve parametre, igra počinje!')
@@ -75,7 +75,7 @@ if not debugMode:
 
 else:
 	t = Table(10, 14)
-	wallsNum = 0
+	wallsNum = 1
 	t.printTable()
 	t.createPlayers(wallsNum)
 	playerX = t.playerX
