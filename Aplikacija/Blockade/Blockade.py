@@ -56,38 +56,42 @@ if not debugMode:
 	chosenWallsNum = requestInputForWallsNumber() # TO-DO uzeti ovu vrednost i dodati je kod svakog igraca
 
 	table = Table(n, m)
+	table.createPlayers(chosenWallsNum)
+	players = { 'X': table.playerX, 'O': table.playerO }
 	for sign in ['X', 'O']:
-		type = FieldType.X if sign == 'X' else FieldType.O
 		for i in range(2):
 			spawn = table.requestInputForPlayerPosition(sign, i)
-			table.createPlayer(type, spawn[0], spawn[1], chosenWallsNum)
+			players[sign].createPawn(spawn[0], spawn[1])
 
 	print(f'Uneli ste sve parametre, igra počinje!')
 
 	table.printTable()
 
-	currentPlayer = 0
+	currentPlayer = table.playerX
 	while(table.isGameFinished() is not True):
-		table.players[currentPlayer].play()
-		currentPlayer = 2 if currentPlayer == 0 else 0
+		currentPlayer.play()
+		currentPlayer = table.playerO if currentPlayer == table.playerX else table.playerX
 
 
 else:
 	t = Table(10, 14)
-	wallsNum = 2
+	wallsNum = 0
 	t.printTable()
-	t.createPlayer(FieldType.X, 4, 4, wallsNum)
-	t.createPlayer(FieldType.X, 7, 4, wallsNum)
-	t.createPlayer(FieldType.O, 4, 10, wallsNum)
-	t.createPlayer(FieldType.O, 7, 10, wallsNum)
+	t.createPlayers(wallsNum)
+	playerX = t.playerX
+	playerO = t.playerO
+	playerX.createPawn(4, 4)
+	playerX.createPawn(7, 4)
+	playerO.createPawn(4, 10)
+	playerO.createPawn(7, 10)
 	t.printTable()
 	#t.players[2].movePlayer(7, 4)
 	t.printTable()
 
-	currentPlayer = 0
+	currentPlayer = t.playerX
 	while(t.isGameFinished() is not True):
-		t.players[currentPlayer].play()
-		currentPlayer = 2 if currentPlayer == 0 else 0
+		currentPlayer.play()
+		currentPlayer = t.playerO if currentPlayer == t.playerX else t.playerX
 
 
 
