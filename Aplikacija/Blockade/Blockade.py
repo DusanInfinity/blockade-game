@@ -15,11 +15,11 @@ def requestInputForSign():
 def requestInputForTableSize():
 	n = -1
 	m = -1
-	while(n < 3 or n > 15 or m < 3 or m > 15):
-		if n != -1 and (n < 3 or n > 15):
-			print("[GRESKA] Minimalna veličina za n je 3, maksimalna 15. Vi ste uneli: " + str(n))
-		if m != -1 and (m < 3 or m > 15): 
-			print("[GRESKA] Minimalna veličina za m je 3, maksimalna 15. Vi ste uneli: " + str(m))
+	while(n < 3 or n > 22 or m < 3 or m > 28):
+		if n != -1 and (n < 3 or n > 22):
+			print("[GRESKA] Minimalna veličina za n je 3, maksimalna 22. Vi ste uneli: " + str(n))
+		if m != -1 and (m < 3 or m > 28): 
+			print("[GRESKA] Minimalna veličina za m je 3, maksimalna 28. Vi ste uneli: " + str(m))
 
 		print("Unesite veličinu table [Format: n, m (primer: 11 14)]: ", end = "")
 		unos = input().split(" ")
@@ -73,7 +73,7 @@ if not debugMode:
 
 
 else:
-	t = Table(11, 14)
+	t = Table(22, 28)
 
 	t.printTable()
 	t.createPlayer(FieldType.X, 4, 4)

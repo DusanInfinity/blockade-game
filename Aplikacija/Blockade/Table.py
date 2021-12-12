@@ -3,7 +3,7 @@ from FieldTypes import FieldType
 from Player import Player
 
 class Table:
-	fieldMarks = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+	fieldMarks = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] + list((chr(i) for i in range(65, 84)))
 
 	def __init__(self, n, m):
 		self.n = n
@@ -102,10 +102,12 @@ class Table:
 				return True
 		return False
 
-	def isHexNumber(self, str):
-		if str.isnumeric() or str == 'A' or str == 'B' or str == 'C' or str == 'D' or str == 'E' or str == 'F':
-			return True
-		return False
+	def parseEnteredValueToTableIndex(self, str):
+		if str.isnumeric():
+			return int(str)
+		if len(str) == 1 and str >= 'A' and str <= 'Z':
+			return ord(str) - 55; # A - 65, imamo brojeve od 1 do 9, sledeci broj je broj 10(A)
+		return -1
 
 	def requestInputForPlayerPosition(self, sign, seqNumber):
 		i = -1
@@ -118,10 +120,9 @@ class Table:
 
 			print(f'Unesite poziciju za {seqNumber}. figuru igrača {sign} [Format: vrsta kolona (primer: 3 5)]: ', end = "")
 			unos = input().split(" ")
-			if len(unos) == 2 and self.isHexNumber(unos[0]) and self.isHexNumber(unos[1]):
-				# TO-DO provera da li je polje vec zauzeto
-				i = int(int(unos[0], 16))
-				j = int(int(unos[1], 16))
+			if len(unos) == 2:
+				i = self.parseEnteredValueToTableIndex(unos[0])
+				j = self.parseEnteredValueToTableIndex(unos[1])
 			
 		print(f'[{sign}({seqNumber})] Uneli ste poziciju ({i}, {j}).')
 		return (i, j)
@@ -141,7 +142,7 @@ class Table:
 			if j != -1 and (j < 1 or j > self.m): 
 				print(f'[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.m}. Vi ste uneli: ' + str(j))
 
-			print(f'Unesite poziciju za zid igrača {sign} [Format: boja (p, z) vrsta kolona (primer: p 6 5)]: ', end = "")
+			print(f'Unesite poziciju za zid igrača {sign} [Format: boja (p ili z) vrsta kolona (primer: p 6 5)]: ', end = "")
 			unos = input().split(" ")
 			if len(unos) == 3 and len(unos[0]) == 1 and unos[1].isnumeric() and unos[2].isnumeric():
 				color = unos[0]
