@@ -1,4 +1,3 @@
-from types import NoneType
 from Field import Field
 from FieldTypes import FieldType
 from Player import Player
@@ -80,20 +79,20 @@ class Table:
 		column = column -1
 		if color == 'p':
 			if row == 0:
-				return NoneType
+				return None
 			try:
 				return [self.matrix[row * 2 - 1][column * 2], self.matrix[row * 2 - 1][column * 2 + 2]]
 			except:
-				return NoneType
+				return None
 		elif color == 'z':
 			if column == 0:
-				return NoneType
+				return None
 			try:
 				return [self.matrix[row * 2][column * 2 + 1], self.matrix[row * 2 + 2][column * 2 + 1]]
 			except:
-				return NoneType
+				return None
 		else:
-			return NoneType
+			return None
 
 
 	def isGameFinished(self):
@@ -101,6 +100,11 @@ class Table:
 			if p.isWinner():
 				print(f"~~~~~~~~ {p.type.name} is WINNER!! ~~~~~~~~")
 				return True
+		return False
+
+	def isHexNumber(self, str):
+		if str.isnumeric() or str == 'A' or str == 'B' or str == 'C' or str == 'D' or str == 'E' or str == 'F':
+			return True
 		return False
 
 	def requestInputForPlayerPosition(self, sign, seqNumber):
@@ -114,10 +118,10 @@ class Table:
 
 			print(f'Unesite poziciju za {seqNumber}. figuru igrača {sign} [Format: vrsta kolona (primer: 3 5)]: ', end = "")
 			unos = input().split(" ")
-			if len(unos) == 2 and unos[0].isnumeric() and unos[1].isnumeric():
+			if len(unos) == 2 and self.isHexNumber(unos[0]) and self.isHexNumber(unos[1]):
 				# TO-DO provera da li je polje vec zauzeto
-				i = int(unos[0])
-				j = int(unos[1])
+				i = int(int(unos[0], 16))
+				j = int(int(unos[1], 16))
 			
 		print(f'[{sign}({seqNumber})] Uneli ste poziciju ({i}, {j}).')
 		return (i, j)
@@ -144,7 +148,7 @@ class Table:
 				i = int(unos[1])
 				j = int(unos[2])
 				field = self.getFieldForWall(i, j, color)
-				if field != NoneType and len(field) > 0:
+				if field != None and len(field) > 0:
 					if field[0].isWall() or field[1].isWall() or field[0].areWallsCrossing(color):
 						print("Vec posotoji zid na ovoj poziciji")
 						i = -1

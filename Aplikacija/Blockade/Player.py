@@ -30,10 +30,18 @@ class Player:
         self.setPlayerOnTable()
 
     def movePlayer(self, x, y):
-        if self.validateMoveForBoardDimensions(x, y) and self.validateMoveForWalls(x, y) and self.validateMoveDirection(x, y):
-            self.updatePlayerCoordinates(x, y)
-        else:
-            print("\nPomeranje pijuna nije moguce!\n")
+        if not self.validateMoveForBoardDimensions(x, y):
+            print("[GRESKA] Uneta pozicija nije u granicama table!");
+            return False
+        if not self.validateMoveForWalls(x, y):
+            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!");
+            return False
+        if not self.validateMoveDirection(x, y):
+            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju!");
+            return False
+        self.updatePlayerCoordinates(x, y)
+        print(f'Uspešno ste pomerili pijuna na poziciju ({x}, {y}).')
+        return True
 
     def validateMoveForBoardDimensions(self, x, y):
         if x < 0 or x > self.board.n or y < 0 or y > self.board.m:
