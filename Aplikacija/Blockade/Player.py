@@ -31,7 +31,6 @@ class Player:
         self.setPlayerOnTable()
 
     def movePlayer(self, x, y):
-        print(x, y)
         if not self.validateMoveForBoardDimensions(x, y):
             print("[GRESKA] Uneta pozicija nije u granicama table!")
             return False
@@ -39,7 +38,7 @@ class Player:
             print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju!")
             return False
         if not self.validateMoveForOtherPijuns(x, y):
-            print("[GRESKA] Ne mozete pomeriti pijuna, vec se nalazi pijun na toj poziciji")
+            print("[GRESKA] Na unetoj poziciji se već nalazi pijun!")
             return False
         if not self.validateMoveForWalls(x, y):
             print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!")
@@ -114,7 +113,6 @@ class Player:
                     return False
             elif self.row < x and self.column < y: # dole-desno
                 if self.diagonalMoveDownRight(self.row, self.column):
-                    print(self.diagonalMoveDownRight(self.row, self.column))
                     return False
 
         return True

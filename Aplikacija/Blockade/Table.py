@@ -3,7 +3,7 @@ from Enums import FieldType
 from Player import Player
 
 class Table:
-	fieldMarks = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] + list((chr(i) for i in range(65, 84)))
+	fieldMarks = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] + list((chr(i) for i in range(65, 84))) # Brojevi(9) + 17 slova => 28 karaktera
 
 	def __init__(self, n, m):
 		self.n = n
@@ -99,7 +99,7 @@ class Table:
 		field = self.getFieldForWall(i, j, color)
 		if field != None and len(field) > 0:
 			if field[0].isWall() or field[1].isWall() or field[0].areWallsCrossing(color):
-				print("[GRESKA] Već posotoji zid na toj poziciji!")
+				print("[GRESKA] Već postoji zid na toj poziciji!")
 			else:
 				for f in field:
 					f.setWall(color)

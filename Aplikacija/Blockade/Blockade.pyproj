@@ -22,11 +22,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Blockade.py" />
+    <Compile Include="Enums.py" />
     <Compile Include="Field.py" />
     <Compile Include="Player.py" />
-    <Compile Include="FieldTypes.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Table.py">
       <SubType>Code</SubType>
     </Compile>

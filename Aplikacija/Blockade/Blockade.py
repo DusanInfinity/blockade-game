@@ -33,7 +33,7 @@ def requestInputForWallsNumber():
 	wallsNum = -1
 	while(wallsNum < 1 or wallsNum > 10):
 		if wallsNum != -1 and (wallsNum < 1 or wallsNum > 10):
-			print("[GRESKA] Minimalni broj zidova je 3, maksimalni 10. Vi ste uneli: " + str(wallsNum))
+			print("[GRESKA] Minimalni broj zidova je 1, maksimalni 10. Vi ste uneli: " + str(wallsNum))
 		print("Unesite broj zidova po igraču: ", end = "")
 		unos = input()
 		if unos.isnumeric():
