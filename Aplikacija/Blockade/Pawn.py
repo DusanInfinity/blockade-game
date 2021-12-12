@@ -135,7 +135,7 @@ class Pawn:
         matrixJ = (y - 1) * 2
         if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI][matrixJ + 1].isWall(): # gore i desno
             return True
-        if self.board.matrix[matrixI - 1][matrixJ - 1 + 2].isWall() and self.board.matrix[matrixI - 2][matrixJ + 1].isWall(): # gore-desno i gore-gore
+        if self.board.matrix[matrixI - 1][matrixJ + 2].isWall() and self.board.matrix[matrixI - 2][matrixJ + 1].isWall(): # gore-desno i gore-gore
             return True
         if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI - 1][matrixJ + 2].isWall(): # gore i gore-desno
             return True

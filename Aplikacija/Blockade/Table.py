@@ -97,7 +97,7 @@ class Table:
 
 		
 	def putWallOnPosition(self, color, i, j):
-		field = self.getFieldForWall(i, j, color)
+		field = self.getFieldsForWall(i, j, color)
 		if field != None and len(field) > 0:
 			if field[0].isWall() or field[1].isWall() or field[0].areWallsCrossing(color):
 				print("[GRESKA] Već postoji zid na toj poziciji!")
