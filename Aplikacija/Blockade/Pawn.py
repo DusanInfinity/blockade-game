@@ -116,50 +116,58 @@ class Pawn:
         return True
 
     def diagonalMoveUpLeft(self, x, y):
-        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2].isWall() and self.board.matrix[(x - 1) * 2][(y - 1) * 2 - 1].isWall():
+        matrixI = (x - 1) * 2
+        matrixJ = (y - 1) * 2
+        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI][matrixJ - 1].isWall():
             return True
-        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2 - 2].isWall() and self.board.matrix[(x - 1) * 2 - 2][(y - 1) * 2 - 1].isWall():
+        if self.board.matrix[matrixI - 1][matrixJ - 2].isWall() and self.board.matrix[matrixI - 2][matrixJ - 1].isWall():
             return True
-        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 - 1].isWall() and self.board.matrix[(x - 1) * 2 - 2][(y - 1) * 2 - 1].isWall():
+        if self.board.matrix[matrixI][matrixJ - 1].isWall() and self.board.matrix[matrixI - 2][matrixJ - 1].isWall():
             return True
-        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2].isWall() and self.board.matrix[(x - 1) * 2 - 2][(y - 1) * 2].isWall():
+        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI - 1][matrixJ - 2].isWall():
             return True
 
         return False
 
 
     def diagonalMoveUpRight(self, x, y):
-        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2].isWall() and self.board.matrix[(x - 1) * 2][(y - 1) * 2 + 1].isWall(): # gore i desno
+        matrixI = (x - 1) * 2
+        matrixJ = (y - 1) * 2
+        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI][matrixJ + 1].isWall(): # gore i desno
             return True
-        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2 - 1 + 2].isWall() and self.board.matrix[(x - 1) * 2 - 2][(y - 1) * 2 + 1].isWall(): # gore-desno i gore-gore
+        if self.board.matrix[matrixI - 1][matrixJ - 1 + 2].isWall() and self.board.matrix[matrixI - 2][matrixJ + 1].isWall(): # gore-desno i gore-gore
             return True
-        if self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2].isWall() and self.board.matrix[(x - 1) * 2 - 1][(y - 1) * 2 + 2].isWall(): # gore i gore-desno
+        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI - 1][matrixJ + 2].isWall(): # gore i gore-desno
             return True
-        if self.board.matrix[(x - 1) * 2 - 2][(y - 1) * 2 + 1].isWall() and self.board.matrix[(x - 1) * 2][(y - 1) * 2 + 1].isWall(): # gore-gore i desno
+        if self.board.matrix[matrixI - 2][matrixJ + 1].isWall() and self.board.matrix[matrixI][matrixJ + 1].isWall(): # gore-gore i desno
             return True
 
         return False
 
     def diagonalMoveDownLeft(self, x, y):
-        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 - 1].isWall() and self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2].isWall(): # levo i dole
+        matrixI = (x - 1) * 2
+        matrixJ = (y - 1) * 2
+        if self.board.matrix[matrixI][matrixJ - 1].isWall() and self.board.matrix[matrixI + 1][matrixJ].isWall(): # levo i dole
             return True
-        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2 - 2].isWall() and self.board.matrix[(x - 1) * 2 + 2][(y - 1) * 2 - 1].isWall(): # dole-levo i dole-dole
+        if self.board.matrix[matrixI + 1][matrixJ - 2].isWall() and self.board.matrix[matrixI + 2][matrixJ - 1].isWall(): # dole-levo i dole-dole
             return True
-        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2 - 2].isWall() and self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2].isWall(): #dole-levo i dole
+        if self.board.matrix[matrixI + 1][matrixJ - 2].isWall() and self.board.matrix[matrixI + 1][matrixJ].isWall(): #dole-levo i dole
             return True
-        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 - 1].isWall() and self.board.matrix[(x - 1) * 2 + 2][(y - 1) * 2 - 1].isWall(): # levo i dole-dole
+        if self.board.matrix[matrixI][matrixJ - 1].isWall() and self.board.matrix[matrixI + 2][matrixJ - 1].isWall(): # levo i dole-dole
             return True
 
         return False
     
     def diagonalMoveDownRight(self, x, y):
-        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2].isWall() and self.board.matrix[(x - 1) * 2][(y - 1) * 2 + 1].isWall(): # dole i desno
+        matrixI = (x - 1) * 2
+        matrixJ = (y - 1) * 2
+        if self.board.matrix[matrixI + 1][matrixJ].isWall() and self.board.matrix[matrixI][matrixJ + 1].isWall(): # dole i desno
             return True
-        if self.board.matrix[(x - 1) * 2 + 2][(y - 1) * 2 + 1].isWall() and self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2 + 2].isWall(): # dole-dole i dole-desno
+        if self.board.matrix[matrixI + 2][matrixJ + 1].isWall() and self.board.matrix[matrixI + 1][matrixJ + 2].isWall(): # dole-dole i dole-desno
             return True
-        if self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2].isWall() and self.board.matrix[(x - 1) * 2 + 1][(y - 1) * 2 + 2].isWall(): # dole i dole-desno 
+        if self.board.matrix[matrixI + 1][matrixJ].isWall() and self.board.matrix[matrixI + 1][matrixJ + 2].isWall(): # dole i dole-desno 
             return True
-        if self.board.matrix[(x - 1) * 2][(y - 1) * 2 + 1].isWall() and self.board.matrix[(x - 1) * 2 + 2][(y - 1) * 2 + 1].isWall(): # desno i dole-dole
+        if self.board.matrix[matrixI][matrixJ + 1].isWall() and self.board.matrix[matrixI + 2][matrixJ + 1].isWall(): # desno i dole-dole
             return True
 
         return False

@@ -75,7 +75,7 @@ class Table:
 		j = (column - 1) * 2
 		return self.matrix[i][j]
 
-	def getFieldForWall(self, row, column, color):
+	def getFieldsForWall(self, row, column, color):
 		row = row - 1
 		column = column -1
 		if color == 'p':
