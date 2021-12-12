@@ -32,13 +32,16 @@ class Player:
 
     def movePlayer(self, x, y):
         if not self.validateMoveForBoardDimensions(x, y):
-            print("[GRESKA] Uneta pozicija nije u granicama table!");
+            print("[GRESKA] Uneta pozicija nije u granicama table!")
             return False
         if not self.validateMoveForWalls(x, y):
-            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!");
+            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!")
             return False
         if not self.validateMoveDirection(x, y):
-            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju!");
+            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju!")
+            return False
+        if not self.validateMoveForOtherPijuns(x, y):
+            print("[GRESKA] Ne mozete pomeriti pijuna, vec se nalazi pijun na toj poziciji")
             return False
         self.updatePlayerCoordinates(x, y)
         print(f'Uspešno ste pomerili pijuna na poziciju ({x}, {y}).')
@@ -70,6 +73,15 @@ class Player:
         # Ne mozemo da preskocimo zid
         return True
 
+    def validateMoveForOtherPijuns(self, x, y):
+        for p in self.board.players:
+            if self.type != p.type and x == p.startingRow and y == p.startingColumn: 
+                # moze da ode na to polje zato sto je to zavrsno polje i ignorisace tog igraca
+                return True
+            if x == p.row and y == p.column:
+                return False
+        
+        return True
 
     def isWinner(self):
         for p in self.board.players:

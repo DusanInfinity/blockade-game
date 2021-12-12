@@ -33,7 +33,7 @@ class Table:
 		n = self.n
 		m = self.m
 
-		print(*["==" for i in range(self.matrixColumns+4)], sep = "", end = "\n\n");
+		print(*["==" for i in range(self.matrixColumns+4)], sep = "", end = "\n\n")
 
 		print("    ", end = "")
 		print(*self.fieldMarks[:m], sep = "   ")

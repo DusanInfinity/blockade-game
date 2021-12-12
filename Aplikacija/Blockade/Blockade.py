@@ -67,8 +67,8 @@ if not debugMode:
 	table.printTable()
 
 	currentPlayer = 0
-	while(t.isGameFinished() is not True):
-		t.players[currentPlayer].play()
+	while(table.isGameFinished() is not True):
+		table.players[currentPlayer].play()
 		currentPlayer = 2 if currentPlayer == 0 else 0
 
 
