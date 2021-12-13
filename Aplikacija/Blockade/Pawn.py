@@ -118,13 +118,13 @@ class Pawn:
     def diagonalMoveUpLeft(self, x, y):
         matrixI = (x - 1) * 2
         matrixJ = (y - 1) * 2
-        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI][matrixJ - 1].isWall():
+        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI][matrixJ - 1].isWall(): # gore i levo
             return True
-        if self.board.matrix[matrixI - 1][matrixJ - 2].isWall() and self.board.matrix[matrixI - 2][matrixJ - 1].isWall():
+        if self.board.matrix[matrixI - 1][matrixJ - 2].isWall() and self.board.matrix[matrixI - 2][matrixJ - 1].isWall(): # gore-levo i gore-gore
             return True
-        if self.board.matrix[matrixI][matrixJ - 1].isWall() and self.board.matrix[matrixI - 2][matrixJ - 1].isWall():
+        if self.board.matrix[matrixI][matrixJ - 1].isWall() and self.board.matrix[matrixI - 2][matrixJ - 1].isWall(): # levo i gore-gore
             return True
-        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI - 1][matrixJ - 2].isWall():
+        if self.board.matrix[matrixI - 1][matrixJ].isWall() and self.board.matrix[matrixI - 1][matrixJ - 2].isWall(): # gore i gore-levo
             return True
 
         return False
