@@ -8,8 +8,8 @@ class Player:
 		self.remainingWalls = remainingWalls
 		self.pawns = []
 
-	def createPawn(self, row, column):
-		newPawn = Pawn(self, row, column, self.board)
+	def createPawn(self, row, column, figureNum):
+		newPawn = Pawn(self, figureNum, row, column, self.board)
 		self.pawns.append(newPawn)
 		newPawn.setPawnOnTable()
 
@@ -52,3 +52,9 @@ class Player:
 					status = PlayStatus.WALL_PLACED
 					self.remainingWalls -= 1
 					self.board.printTable()
+
+	def getFigureByNumber(self, num):
+		if num == 1:
+			return self.pawns[0]
+		else:
+			return self.pawns[1]

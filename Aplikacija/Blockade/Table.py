@@ -2,7 +2,7 @@ from Field import Field
 from Enums import FieldType
 from Player import Player
 from Pawn import Pawn
-from copy import deepcopy
+import copy
 
 class Table:
 	fieldMarks = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] + list((chr(i) for i in range(65, 84))) # Brojevi(9) + 17 slova => 28 karaktera
@@ -226,4 +226,16 @@ class Table:
 		print(f'[{sign} - ZID] Uneli ste poziciju ({i}, {j}), boja: {color}')
 		return (color, i, j)
 
+	def getPlayerByType(self, type):
+		if type == FieldType.X:
+			return self.playerX
+		else:
+			return self.playerO
+
+	def playMove(self, playerType, figureNumber, newX, newY):
+		newState = copy.deepcopy(self)
+		player = newState.getPlayerByType(playerType)
+		figure = player.getFigureByNumber(figureNumber)
+		figure.updatePawnCoordinates(newX, newY)
+		return newState
 
