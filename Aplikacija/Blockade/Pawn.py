@@ -1,11 +1,13 @@
 from typing import Collection
 from Field import Field
 from Enums import FieldType
+import copy
 
 
 class Pawn:
-    def __init__(self, player, row, column, board):
+    def __init__(self, player, figureNumber, row, column, board):
         self.player = player
+        self.figureNum = figureNumber
         self.startingRow = row
         self.startingColumn = column
         self.row = row
@@ -183,4 +185,33 @@ class Pawn:
                 return False
         
         return True
+
+    def validateMove(self, x, y):
+        if (not self.validateMoveForWalls(x, y) or
+            not self.validateMoveDirection(x, y) or
+            not self.validateMoveForBoardDimensions(x, y) or
+            not self.validateMoveForOtherPawns(x, y)):
+            return False
+        return True
+
+    def getPossibleMoves(self):
+        possible_moves = []
+
+        hv = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
+        diagonal = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+        moves = hv + diagonal
+
+        for move in moves:
+            if self.validateMove(self.row + move[0], self.column + move[1]):
+                possible_moves.append(move)
+        return possible_moves
+
+    def getAllPossibleNextStates(self):
+        possible_moves = self.getPossibleMoves()
+        states = []
+        for move in possible_moves:
+            x = self.row + move[0]
+            y = self.column + move[1]
+            states.append(self.board.playMove(self.player.type, self.figureNum, x, y))
+        return states
 

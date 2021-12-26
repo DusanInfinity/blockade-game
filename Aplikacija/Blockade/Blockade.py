@@ -1,5 +1,6 @@
 from Table import Table
 from Enums import FieldType
+import copy
 
 def requestInputForSign():
 	chosenSign = -1
@@ -61,7 +62,7 @@ if not debugMode:
 	for sign in ['X', 'O']:
 		for i in range(2):
 			spawn = table.requestInputForPlayerPosition(sign, i+1)
-			players[sign].createPawn(spawn[0], spawn[1])
+			players[sign].createPawn(spawn[0], spawn[1], i+1)
 
 	print(f'Uneli ste sve parametre, igra počinje!')
 
@@ -80,13 +81,19 @@ else:
 	t.createPlayers(wallsNum)
 	playerX = t.playerX
 	playerO = t.playerO
-	playerX.createPawn(4, 4)
-	playerX.createPawn(7, 4)
-	playerO.createPawn(4, 10)
-	playerO.createPawn(7, 10)
+	playerX.createPawn(4, 4, 1)
+	playerX.createPawn(7, 4, 2)
+	playerO.createPawn(4, 10, 1)
+	playerO.createPawn(7, 10, 2)
 	t.printTable()
 	#t.players[2].movePlayer(7, 4)
 	t.printTable()
+
+	possible_states = t.playerX.getFigureByNumber(1).getAllPossibleNextStates()
+	for i in range(0, len(possible_states)):
+		print(f'\n\nStanje {i}:')
+		possible_states[i].printTable()
+	
 
 	currentPlayer = t.playerX
 	while(t.isGameFinished() is not True):
