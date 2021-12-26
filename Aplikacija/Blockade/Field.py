@@ -16,7 +16,6 @@ class Field:
 			return True
 		return False
 
-
 	def isWall(self):
 		if self.type == FieldType.HORIZONTAL_WALL_FULL or self.type == FieldType.VERTICAL_WALL_FULL:
 			return True
@@ -26,7 +25,7 @@ class Field:
 		#treba provera da se uradi da li se prolazi kroz zid
 
 		if self.isWall():
-			print("Vec posotoji zid na ovoj poziciji")
+			print("[GRESKA] Već posotoji zid na ovoj poziciji")
 		else:
 			if boja == 'p': # Plavo - horizonalno
 				self.type = FieldType.HORIZONTAL_WALL_FULL

@@ -71,14 +71,14 @@ class Pawn:
             if abs(self.row - x) > 0: # razlika izmedju ta dva argumenta mora da bude 2 ili 0
                 if self.row < x: # treba da ide dole
                     if (self.board.matrix[(self.row - 1) * 2 + 1][(self.column - 1) * 2].isWall()
-                        or self.board.matrix[self.row * 2 + 1][(self.column - 1) * 2].isWall()
+                        or ((abs(self.row - x) == 2) and self.board.matrix[self.row * 2 + 1][(self.column - 1) * 2].isWall())
                     ):
                         return False
                     else:
                         return True
                 elif self.row > x: # treba da ide gore
                     if (self.board.matrix[(self.row - 1) * 2 - 1][(self.column - 1) * 2].isWall()
-                        or self.board.matrix[(self.row - 2) * 2 - 1][(self.column - 1) * 2].isWall()
+                        or ((abs(self.row - x) == 2) and self.board.matrix[(self.row - 2) * 2 - 1][(self.column - 1) * 2].isWall())
                     ):
                         return False
                     else:
@@ -86,14 +86,14 @@ class Pawn:
             elif abs(self.column - y) > 0:
                 if self.column < y: # treba da ide desno
                     if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 + 1].isWall()
-                        or self.board.matrix[(self.row - 1) * 2][self.column * 2 + 1].isWall()
+                        or ((abs(self.column - y) == 2) and self.board.matrix[(self.row - 1) * 2][self.column * 2 + 1].isWall())
                     ):
                         return False
                     else:
                         return True
                 elif self.column > y: # treba da ide levo
                     if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 - 1].isWall() 
-                        or self.board.matrix[(self.row - 1) * 2][(self.column - 2) * 2 - 1].isWall()
+                        or ((abs(self.column - y) == 2) and self.board.matrix[(self.row - 1) * 2][(self.column - 2) * 2 - 1].isWall())
                     ):
                         return False
                     else:
@@ -184,3 +184,26 @@ class Pawn:
         
         return True
 
+    def validateMove(self, x, y):
+        if (not self.validateMoveForWalls(x, y) or
+            not self.validateMoveDirection(x, y) or
+            not self.validateMoveForBoardDimensions(x, y) or
+            not self.validateMoveForOtherPawns(x, y)):
+            return False
+        return True
+
+
+    def possibleMoves(self):
+        moguci_potezi = []
+
+        # W A S D
+        niz_HV = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
+        # WA WD SA SD
+        niz_dijagonalno = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+        kombinacija_poteza = niz_HV + niz_dijagonalno
+
+        for potez in kombinacija_poteza:
+            if self.validateMove(self.row + potez[0], self.column + potez[1]):
+                moguci_potezi.append(self.board.getFieldByRowAndColumn(self.row + potez[0], self.column + potez[1]))
+        return moguci_potezi

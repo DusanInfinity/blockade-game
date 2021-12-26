@@ -15,7 +15,7 @@ class Player:
 
 	def choosePawn(self):
 		chosenPawn = -1
-		sign = self.type.name;
+		sign = self.type.name
 		while(chosenPawn != 1 and chosenPawn != 2):
 			print(f'1) {sign}1\n2) {sign}2')
 			print("Unesite broj željenog pijuna: ", end = "")
