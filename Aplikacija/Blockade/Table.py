@@ -106,7 +106,7 @@ class Table:
 				for f in field:
 					f.setWall(color)
 				# provera da li je put zatvoren
-				if self.wallClosesTheWay():
+				if self.isWallClosingPath():
 					for f in field: # TODO obrisati ovaj deo kad se napisu funkcije za odigravanje poteza i vracanja na staro stanje (DUSAN)
 						if color == 'p':
 							f.changeType(FieldType.HORIZONTAL_WALL_EMPTY)
@@ -122,24 +122,25 @@ class Table:
 
 
 
-	def wallClosesTheWay(self):
+	def isWallClosingPath(self):
 		# za X playera
-
 		for p in self.playerX.pawns:
+			playerField = self.getFieldByRowAndColumn(p.row, p.column)
 			for ep in self.playerO.pawns:
-				if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+				if not self.doesPathExistBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
 					return True
 		
 		# za O playera
 		for p in self.playerO.pawns:
+			playerField = self.getFieldByRowAndColumn(p.row, p.column)
 			for ep in self.playerX.pawns:
-				if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+				if not self.doesPathExistBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
 					return True
 		
 		return False
 
 
-	def a_star(self, start, end):
+	def doesPathExistBetweenNodes(self, start, end):
 		found_end = False
 		open_set = set()
 		open_set.add(start)
@@ -149,11 +150,11 @@ class Table:
 		while len(open_set) > 0 and (not found_end):
 			node = None
 			for next_node in open_set:
-				if node is None or g[next_node] + self.heuristikaZaPijuna(next_node, end) < g[node] + self.heuristikaZaPijuna(node, end):
+				if node is None or g[next_node] + self.calculateHeuristic(next_node, end) < g[node] + self.calculateHeuristic(node, end):
 					node = next_node
 			if node == end:
 				return True
-			for m in node.possibleMoves():			   
+			for m in node.getAllPossibleMovementFields():			   
 				if m not in open_set and m not in closed_set:
 					open_set.add(m)
 					g[m] = g[node] + 1
@@ -165,7 +166,7 @@ class Table:
 		return False
 	
 
-	def heuristikaZaPijuna(self, node, end):
+	def calculateHeuristic(self, node, end):
 		return abs(node.i - end.i) + abs(node.j - end.j)
 
 

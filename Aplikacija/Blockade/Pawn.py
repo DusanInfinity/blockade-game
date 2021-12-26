@@ -29,6 +29,20 @@ class Pawn:
         self.column = y
         self.setPawnOnTable()
 
+
+    # TO-DO ovo je losa praksa, dve funkcije rade istu stvar, mozemo da zaboravimo neku proveru u nekoj
+    def validateMove(self, x, y): # bez printa
+        if x < 1 or x > self.board.n: #[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}. Vi ste uneli: ' + str(i))
+            return False
+        if y < 1 or y > self.board.m: #[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}. Vi ste uneli: ' + str(j))
+            return False
+        if (not self.validateMoveForWalls(x, y) or
+            not self.validateMoveDirection(x, y) or
+            not self.validateMoveForBoardDimensions(x, y) or
+            not self.validateMoveForOtherPawns(x, y)):
+            return False
+        return True
+
     def movePawn(self, x, y):
         if x < 1 or x > self.board.n:
             print(f'[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}!')
@@ -191,18 +205,6 @@ class Pawn:
             if x == p.row and y == p.column:
                 return False
         
-        return True
-
-    def validateMove(self, x, y):
-        if x < 1 or x > self.board.n: #[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}. Vi ste uneli: ' + str(i))
-            return False
-        if y < 1 or y > self.board.m: #[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}. Vi ste uneli: ' + str(j))
-            return False
-        if (not self.validateMoveForWalls(x, y) or
-            not self.validateMoveDirection(x, y) or
-            not self.validateMoveForBoardDimensions(x, y) or
-            not self.validateMoveForOtherPawns(x, y)):
-            return False
         return True
  
     def getPossibleMoves(self):

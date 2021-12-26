@@ -89,10 +89,10 @@ else:
 	#t.players[2].movePlayer(7, 4)
 	t.printTable()
 
-	possible_states = t.playerX.getFigureByNumber(1).getAllPossibleNextStates()
-	for i in range(0, len(possible_states)):
-		print(f'\n\nStanje {i}:')
-		possible_states[i].printTable()
+	#possible_states = t.playerX.getFigureByNumber(1).getAllPossibleNextStates()
+	#for i in range(0, len(possible_states)):
+	#	print(f'\n\nStanje {i}:')
+	#	possible_states[i].printTable()
 	
 
 	currentPlayer = t.playerX
