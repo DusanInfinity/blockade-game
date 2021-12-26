@@ -105,10 +105,70 @@ class Table:
 			else:
 				for f in field:
 					f.setWall(color)
+				# provera da li je put zatvoren
+				if self.wallClosesTheWay():
+					for f in field: # TODO obrisati ovaj deo kad se napisu funkcije za odigravanje poteza i vracanja na staro stanje (DUSAN)
+						if color == 'p':
+							f.changeType(FieldType.HORIZONTAL_WALL_EMPTY)
+						if color == 'z':
+							f.changeType(FieldType.VERTICAL_WALL_EMPTY)
+					print("[GRESKA] Zid zatvara put jednom od pijuna!")
+					return False
 				return True
 		else:
 			print("[GRESKA] Ne možete postaviti zid na tu poziciju!")
 		return False
+
+
+
+
+	def wallClosesTheWay(self):
+		# za X playera
+
+		for p in self.playerX.pawns:
+			for ep in self.playerO.pawns:
+				if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+					return True
+		
+		# za O playera
+		for p in self.playerO.pawns:
+			for ep in self.playerX.pawns:
+				if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+					return True
+		
+		return False
+
+
+	def a_star(self, start, end):
+		found_end = False
+		open_set = set()
+		open_set.add(start)
+		closed_set = set()
+		g = {}
+		g[start] = 0
+		while len(open_set) > 0 and (not found_end):
+			node = None
+			for next_node in open_set:
+				if node is None or g[next_node] + self.heuristikaZaPijuna(next_node, end) < g[node] + self.heuristikaZaPijuna(node, end):
+					node = next_node
+			if node == end:
+				return True
+			for m in node.possibleMoves():			   
+				if m not in open_set and m not in closed_set:
+					open_set.add(m)
+					g[m] = g[node] + 1
+				else:
+					if g[m] > g[node] + 1:
+						g[m] = g[node] + 1
+			open_set.remove(node)
+			closed_set.add(node)
+		return False
+	
+
+	def heuristikaZaPijuna(self, node, end):
+		return abs(node.i - end.i) + abs(node.j - end.j)
+
+
 
 	def isGameFinished(self):
 		if self.playerX.isWinner(self.playerO):
@@ -178,3 +238,4 @@ class Table:
 		figure = player.getFigureByNumber(figureNumber)
 		figure.updatePawnCoordinates(newX, newY)
 		return newState
+

@@ -1,5 +1,4 @@
 from typing import Collection
-from Field import Field
 from Enums import FieldType
 import copy
 
@@ -73,14 +72,14 @@ class Pawn:
             if abs(self.row - x) > 0: # razlika izmedju ta dva argumenta mora da bude 2 ili 0
                 if self.row < x: # treba da ide dole
                     if (self.board.matrix[(self.row - 1) * 2 + 1][(self.column - 1) * 2].isWall()
-                        or self.board.matrix[self.row * 2 + 1][(self.column - 1) * 2].isWall()
+                        or ((abs(self.row - x) == 2) and self.board.matrix[self.row * 2 + 1][(self.column - 1) * 2].isWall())
                     ):
                         return False
                     else:
                         return True
                 elif self.row > x: # treba da ide gore
                     if (self.board.matrix[(self.row - 1) * 2 - 1][(self.column - 1) * 2].isWall()
-                        or self.board.matrix[(self.row - 2) * 2 - 1][(self.column - 1) * 2].isWall()
+                        or ((abs(self.row - x) == 2) and self.board.matrix[(self.row - 2) * 2 - 1][(self.column - 1) * 2].isWall())
                     ):
                         return False
                     else:
@@ -88,14 +87,14 @@ class Pawn:
             elif abs(self.column - y) > 0:
                 if self.column < y: # treba da ide desno
                     if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 + 1].isWall()
-                        or self.board.matrix[(self.row - 1) * 2][self.column * 2 + 1].isWall()
+                        or ((abs(self.column - y) == 2) and self.board.matrix[(self.row - 1) * 2][self.column * 2 + 1].isWall())
                     ):
                         return False
                     else:
                         return True
                 elif self.column > y: # treba da ide levo
                     if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 - 1].isWall() 
-                        or self.board.matrix[(self.row - 1) * 2][(self.column - 2) * 2 - 1].isWall()
+                        or ((abs(self.column - y) == 2) and self.board.matrix[(self.row - 1) * 2][(self.column - 2) * 2 - 1].isWall())
                     ):
                         return False
                     else:
@@ -193,7 +192,7 @@ class Pawn:
             not self.validateMoveForOtherPawns(x, y)):
             return False
         return True
-
+ 
     def getPossibleMoves(self):
         possible_moves = []
 
@@ -214,4 +213,3 @@ class Pawn:
             y = self.column + move[1]
             states.append(self.board.playMove(self.player.type, self.figureNum, x, y))
         return states
-

@@ -1,4 +1,5 @@
 from Enums import FieldType
+from Pawn import Pawn
 
 class Field:
 	def __init__(self, i, j, type, board):
@@ -16,7 +17,6 @@ class Field:
 			return True
 		return False
 
-
 	def isWall(self):
 		if self.type == FieldType.HORIZONTAL_WALL_FULL or self.type == FieldType.VERTICAL_WALL_FULL:
 			return True
@@ -26,7 +26,7 @@ class Field:
 		#treba provera da se uradi da li se prolazi kroz zid
 
 		if self.isWall():
-			print("Vec posotoji zid na ovoj poziciji")
+			print("[GRESKA] Već posotoji zid na ovoj poziciji")
 		else:
 			if boja == 'p': # Plavo - horizonalno
 				self.type = FieldType.HORIZONTAL_WALL_FULL
@@ -56,3 +56,19 @@ class Field:
 	def changeType(self, type):
 		self.type = type
 	
+
+	def possibleMoves(self):
+		if not self.isFieldForPlayer():
+			return []
+		pawn = Pawn(None, int(self.i / 2) + 1, int(self.j / 2) + 1, self.board)
+		moguci_potezi = []
+		# W A S D
+		niz_HV = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
+		# WA WD SA SD
+		niz_dijagonalno = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+		kombinacija_poteza = niz_HV + niz_dijagonalno
+		for potez in kombinacija_poteza:
+			if pawn.validateMove((int(self.i / 2) + 1) + potez[0], (int(self.j / 2) + 1) + potez[1]):
+				moguci_potezi.append(self.board.getFieldByRowAndColumn((int(self.i / 2) + 1) + potez[0], (int(self.j / 2) + 1) + potez[1]))
+		return moguci_potezi
