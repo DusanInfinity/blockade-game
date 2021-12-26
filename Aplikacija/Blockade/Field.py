@@ -60,7 +60,10 @@ class Field:
 	def possibleMoves(self):
 		if not self.isFieldForPlayer():
 			return []
-		pawn = Pawn(None, 1, int(self.i / 2) + 1, int(self.j / 2) + 1, self.board)
+		row = int(self.i / 2) + 1
+		column = int(self.j / 2) + 1
+
+		pawn = Pawn(None, 1, row, column, self.board)
 		moguci_potezi = []
 		# W A S D
 		niz_HV = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
@@ -69,6 +72,6 @@ class Field:
 
 		kombinacija_poteza = niz_HV + niz_dijagonalno
 		for potez in kombinacija_poteza:
-			if pawn.validateMove((int(self.i / 2) + 1) + potez[0], (int(self.j / 2) + 1) + potez[1]):
-				moguci_potezi.append(self.board.getFieldByRowAndColumn((int(self.i / 2) + 1) + potez[0], (int(self.j / 2) + 1) + potez[1]))
+			if pawn.validateMove(row + potez[0], column + potez[1]):
+				moguci_potezi.append(self.board.getFieldByRowAndColumn(row + potez[0], column + potez[1]))
 		return moguci_potezi

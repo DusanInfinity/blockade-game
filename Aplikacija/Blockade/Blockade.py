@@ -83,8 +83,8 @@ else:
 	playerO = t.playerO
 	playerX.createPawn(4, 4, 1)
 	playerX.createPawn(7, 4, 2)
-	playerO.createPawn(4, 10, 1)
-	playerO.createPawn(7, 10, 2)
+	playerO.createPawn(9, 13, 1)
+	playerO.createPawn(10, 13, 2)
 	t.printTable()
 	#t.players[2].movePlayer(7, 4)
 	t.printTable()

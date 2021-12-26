@@ -30,6 +30,12 @@ class Pawn:
         self.setPawnOnTable()
 
     def movePawn(self, x, y):
+        if x < 1 or x > self.board.n:
+            print(f'[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}!')
+            return False
+        if y < 1 or y > self.board.m:
+            print(f'[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}!')
+            return False
         if not self.validateMoveForBoardDimensions(x, y):
             print("[GRESKA] Uneta pozicija nije u granicama table!")
             return False
@@ -68,33 +74,35 @@ class Pawn:
                 return False
                 
     def validateMoveForWalls(self, x, y):
+        matrixI = (self.row - 1) * 2
+        matrixJ = (self.column - 1) * 2
         if self.row == x or self.column == y: # AKO IDE GORE DOLE LEVO DESNO
             if abs(self.row - x) > 0: # razlika izmedju ta dva argumenta mora da bude 2 ili 0
                 if self.row < x: # treba da ide dole
-                    if (self.board.matrix[(self.row - 1) * 2 + 1][(self.column - 1) * 2].isWall()
-                        or ((abs(self.row - x) == 2) and self.board.matrix[self.row * 2 + 1][(self.column - 1) * 2].isWall())
+                    if (self.board.matrix[matrixI + 1][matrixJ].isWall()
+                        or ((abs(self.row - x) == 2) and self.board.matrix[self.row * 2 + 1][matrixJ].isWall())
                     ):
                         return False
                     else:
                         return True
                 elif self.row > x: # treba da ide gore
-                    if (self.board.matrix[(self.row - 1) * 2 - 1][(self.column - 1) * 2].isWall()
-                        or ((abs(self.row - x) == 2) and self.board.matrix[(self.row - 2) * 2 - 1][(self.column - 1) * 2].isWall())
+                    if (self.board.matrix[matrixI - 1][matrixJ].isWall()
+                        or ((abs(self.row - x) == 2) and self.board.matrix[(self.row - 2) * 2 - 1][matrixJ].isWall())
                     ):
                         return False
                     else:
                         return True
             elif abs(self.column - y) > 0:
                 if self.column < y: # treba da ide desno
-                    if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 + 1].isWall()
-                        or ((abs(self.column - y) == 2) and self.board.matrix[(self.row - 1) * 2][self.column * 2 + 1].isWall())
+                    if (self.board.matrix[matrixI][matrixJ + 1].isWall()
+                        or ((abs(self.column - y) == 2) and self.board.matrix[matrixI][self.column * 2 + 1].isWall())
                     ):
                         return False
                     else:
                         return True
                 elif self.column > y: # treba da ide levo
-                    if (self.board.matrix[(self.row - 1) * 2][(self.column - 1) * 2 - 1].isWall() 
-                        or ((abs(self.column - y) == 2) and self.board.matrix[(self.row - 1) * 2][(self.column - 2) * 2 - 1].isWall())
+                    if (self.board.matrix[matrixI][matrixJ - 1].isWall() 
+                        or ((abs(self.column - y) == 2) and self.board.matrix[matrixI][(self.column - 2) * 2 - 1].isWall())
                     ):
                         return False
                     else:
@@ -186,6 +194,10 @@ class Pawn:
         return True
 
     def validateMove(self, x, y):
+        if x < 1 or x > self.board.n: #[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}. Vi ste uneli: ' + str(i))
+            return False
+        if y < 1 or y > self.board.m: #[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}. Vi ste uneli: ' + str(j))
+            return False
         if (not self.validateMoveForWalls(x, y) or
             not self.validateMoveDirection(x, y) or
             not self.validateMoveForBoardDimensions(x, y) or
