@@ -75,7 +75,7 @@ if not debugMode:
 
 else:
 	t = Table(10, 14)
-	wallsNum = 1
+	wallsNum = 4
 	t.printTable()
 	t.createPlayers(wallsNum)
 	playerX = t.playerX
@@ -92,6 +92,5 @@ else:
 	while(t.isGameFinished() is not True):
 		currentPlayer.play()
 		currentPlayer = t.playerO if currentPlayer == t.playerX else t.playerX
-
 
 

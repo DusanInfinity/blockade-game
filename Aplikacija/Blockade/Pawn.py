@@ -1,5 +1,4 @@
 from typing import Collection
-from Field import Field
 from Enums import FieldType
 
 
@@ -193,17 +192,23 @@ class Pawn:
         return True
 
 
-    def possibleMoves(self):
-        moguci_potezi = []
-
-        # W A S D
-        niz_HV = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
-        # WA WD SA SD
-        niz_dijagonalno = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-
-        kombinacija_poteza = niz_HV + niz_dijagonalno
-
-        for potez in kombinacija_poteza:
-            if self.validateMove(self.row + potez[0], self.column + potez[1]):
-                moguci_potezi.append(self.board.getFieldByRowAndColumn(self.row + potez[0], self.column + potez[1]))
-        return moguci_potezi
+    def getPossibleMoves(self):
+        possible_moves = []
+ 
+        hv = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
+        diagonal = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+        moves = hv + diagonal
+ 
+        for move in moves:
+            if self.validateMove(self.row + move[0], self.column + move[1]):
+                possible_moves.append(move)
+        return possible_moves
+ 
+    def getAllPossibleNextStates(self):
+        possible_moves = self.getPossibleMoves()
+        states = []
+        for move in possible_moves:
+            x = self.row + move[0]
+            y = self.column + move[1]
+            states.append(self.board.playMove(self.player.type, self.figureNum, x, y))
+        return states

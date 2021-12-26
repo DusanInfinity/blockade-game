@@ -103,16 +103,17 @@ class Table:
 			if field[0].isWall() or field[1].isWall() or field[0].areWallsCrossing(color):
 				print("[GRESKA] Već postoji zid na toj poziciji!")
 			else:
-				stara_tabla = deepcopy(self)
 				for f in field:
 					f.setWall(color)
 				# provera da li je put zatvoren
-				tabla_sa_zidom = deepcopy(self)
 				if self.wallClosesTheWay():
-					self = stara_tabla
+					for f in field: # TODO obrisati ovaj deo kad se napisu funkcije za odigravanje poteza i vracanja na staro stanje (DUSAN)
+						if color == 'p':
+							f.changeType(FieldType.HORIZONTAL_WALL_EMPTY)
+						if color == 'z':
+							f.changeType(FieldType.VERTICAL_WALL_EMPTY)
 					print("[GRESKA] Zid zatvara put jednom od pijuna!")
 					return False
-				self = tabla_sa_zidom
 				return True
 		else:
 			print("[GRESKA] Ne možete postaviti zid na tu poziciju!")
@@ -126,16 +127,17 @@ class Table:
 
 		for p in self.playerX.pawns:
 			for ep in self.playerO.pawns:
-				#if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
-					return False
+				if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+					return True
 		
+		# za O playera
 		for p in self.playerO.pawns:
 			for ep in self.playerX.pawns:
-				#if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
-					return False
+				if not self.a_star(self.getFieldByRowAndColumn(p.row, p.column), self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+					return True
 		
 		return False
-		return True
+
 
 	def a_star(self, start, end):
 		found_end = False
@@ -151,29 +153,20 @@ class Table:
 					node = next_node
 			if node == end:
 				return True
-			for m in node.possibleMoves(): 
-				"""
-					ovde trazim poteze za pijuna, mogu da iskoristim to nekako da ono ne gleda pijuna
-					nego da gleda Field, posto sve radim kroz field za poteze.
-					Pijuni su mi nebitni u ovoj prici, bitno mi je samo njihovo pocetno polje i krajnje,
-					sve osale provere kroz a* mogu da radim sa obican Field i samo pomocu poteza
-				"""					   
+			for m in node.possibleMoves():			   
 				if m not in open_set and m not in closed_set:
 					open_set.add(m)
 					g[m] = g[node] + 1
 				else:
 					if g[m] > g[node] + 1:
 						g[m] = g[node] + 1
-					if m in closed_set:
-						closed_set.remove(m)
-						open_set.add(m)
 			open_set.remove(node)
 			closed_set.add(node)
 		return False
-		
+	
 
 	def heuristikaZaPijuna(self, node, end):
-		return abs(node.row - end.row) + abs(node.column - end.column)
+		return abs(node.i - end.i) + abs(node.j - end.j)
 
 
 
