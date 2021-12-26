@@ -96,24 +96,22 @@ class Table:
 		else:
 			return None
 
+	def placeWallsInFields(self, fields, color):
+		for f in fields:
+			f.setWall(color)
 		
 	def putWallOnPosition(self, color, i, j):
-		field = self.getFieldsForWall(i, j, color)
-		if field != None and len(field) > 0:
-			if field[0].isWall() or field[1].isWall() or field[0].areWallsCrossing(color):
+		fields = self.getFieldsForWall(i, j, color)
+		if fields != None and len(fields) > 0:
+			if fields[0].isWall() or fields[1].isWall() or fields[0].areWallsCrossing(color):
 				print("[GRESKA] Već postoji zid na toj poziciji!")
 			else:
-				for f in field:
-					f.setWall(color)
+				newState = self.placeWallInNewState(color, i, j)
 				# provera da li je put zatvoren
-				if self.isWallClosingPath():
-					for f in field: # TODO obrisati ovaj deo kad se napisu funkcije za odigravanje poteza i vracanja na staro stanje (DUSAN)
-						if color == 'p':
-							f.changeType(FieldType.HORIZONTAL_WALL_EMPTY)
-						if color == 'z':
-							f.changeType(FieldType.VERTICAL_WALL_EMPTY)
+				if newState.isWallClosingPath():
 					print("[GRESKA] Zid zatvara put jednom od pijuna!")
 					return False
+				self.placeWallsInFields(fields, color)
 				return True
 		else:
 			print("[GRESKA] Ne možete postaviti zid na tu poziciju!")
@@ -233,10 +231,16 @@ class Table:
 		else:
 			return self.playerO
 
-	def playMove(self, playerType, figureNumber, newX, newY):
+	def playMoveInNewState(self, playerType, figureNumber, newX, newY):
 		newState = copy.deepcopy(self)
 		player = newState.getPlayerByType(playerType)
 		figure = player.getFigureByNumber(figureNumber)
 		figure.updatePawnCoordinates(newX, newY)
+		return newState
+
+	def placeWallInNewState(self, color, i, j):
+		newState = copy.deepcopy(self)
+		fields = newState.getFieldsForWall(i, j, color)
+		newState.placeWallsInFields(fields, color)
 		return newState
 

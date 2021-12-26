@@ -225,5 +225,5 @@ class Pawn:
         for move in possible_moves:
             x = self.row + move[0]
             y = self.column + move[1]
-            states.append(self.board.playMove(self.player.type, self.figureNum, x, y))
+            states.append(self.board.playMoveInNewState(self.player.type, self.figureNum, x, y))
         return states

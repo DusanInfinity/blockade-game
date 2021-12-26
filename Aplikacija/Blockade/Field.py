@@ -60,18 +60,14 @@ class Field:
 	def getAllPossibleMovementFields(self):
 		if not self.isFieldForPlayer():
 			return []
+
 		row = int(self.i / 2) + 1
 		column = int(self.j / 2) + 1
 
 		pawn = Pawn(None, 1, row, column, self.board)
-		moguca_polja = []
-		# W A S D
-		niz_HV = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
-		# WA WD SA SD
-		niz_dijagonalno = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+		possible_moves = pawn.getPossibleMoves();
 
-		kombinacija_poteza = niz_HV + niz_dijagonalno
-		for potez in kombinacija_poteza:
-			if pawn.validateMove(row + potez[0], column + potez[1]):
-				moguca_polja.append(self.board.getFieldByRowAndColumn(row + potez[0], column + potez[1]))
-		return moguca_polja
+		possible_fields = []
+		for potez in possible_moves:
+			possible_fields.append(self.board.getFieldByRowAndColumn(row + potez[0], column + potez[1]))		
+		return possible_fields
