@@ -60,7 +60,7 @@ class Field:
 	def possibleMoves(self):
 		if not self.isFieldForPlayer():
 			return []
-		pawn = Pawn(None, int(self.i / 2) + 1, int(self.j / 2) + 1, self.board)
+		pawn = Pawn(None, 1, int(self.i / 2) + 1, int(self.j / 2) + 1, self.board)
 		moguci_potezi = []
 		# W A S D
 		niz_HV = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
