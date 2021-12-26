@@ -64,10 +64,10 @@ class Field:
 		row = int(self.i / 2) + 1
 		column = int(self.j / 2) + 1
 
-		pawn = Pawn(None, 1, row, column, self.board)
+		pawn = Pawn(None, 1, row, column, self.board) # virtuelni pijun - nema ga na tabli, pruza pristup funkcijama klase Pawn
 		possible_moves = pawn.getPossibleMoves();
 
 		possible_fields = []
 		for potez in possible_moves:
-			possible_fields.append(self.board.getFieldByRowAndColumn(row + potez[0], column + potez[1]))		
+			possible_fields.append(self.board.getFieldByRowAndColumn(potez[0], potez[1]))		
 		return possible_fields

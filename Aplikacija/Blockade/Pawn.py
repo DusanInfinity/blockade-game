@@ -215,15 +215,17 @@ class Pawn:
         moves = hv + diagonal
 
         for move in moves:
-            if self.validateMove(self.row + move[0], self.column + move[1]):
-                possible_moves.append(move)
+            x = move[0] + self.row
+            y = move[1] + self.column            
+            if self.validateMove(x, y):
+                possible_moves.append((x, y))
         return possible_moves
 
     def getAllPossibleNextStates(self):
         possible_moves = self.getPossibleMoves()
         states = []
         for move in possible_moves:
-            x = self.row + move[0]
-            y = self.column + move[1]
+            x = move[0]
+            y = move[1]
             states.append(self.board.playMoveInNewState(self.player.type, self.figureNum, x, y))
         return states
