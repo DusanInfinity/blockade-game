@@ -32,6 +32,8 @@ class Pawn:
 
     # TO-DO ovo je losa praksa, dve funkcije rade istu stvar, mozemo da zaboravimo neku proveru u nekoj
     def validateMove(self, x, y): # bez printa
+        if x == self.row and y == self.column:
+            return False
         if x < 1 or x > self.board.n: #[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}. Vi ste uneli: ' + str(i))
             return False
         if y < 1 or y > self.board.m: #[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}. Vi ste uneli: ' + str(j))
@@ -44,6 +46,9 @@ class Pawn:
         return True
 
     def movePawn(self, x, y):
+        if x == self.row and y == self.column:
+            print(f'[GRESKA] Pijun se već nalazi na unetoj poziciji!')
+            return False
         if x < 1 or x > self.board.n:
             print(f'[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}!')
             return False
