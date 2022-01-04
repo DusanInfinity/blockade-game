@@ -70,34 +70,43 @@ if not debugMode:
 
 	currentPlayer = table.playerX
 	while(table.isGameFinished() is not True):
-		currentPlayer.play()
+		isComputer = True if (currentPlayer == table.playerX and chosenSign == 1 or currentPlayer == table.playerO and chosenSign == 2) else False
+		currentPlayer.play(isComputer)
 		currentPlayer = table.playerO if currentPlayer == table.playerX else table.playerX
 
 
 else:
-	t = Table(10, 14)
+	chosenSign = 1
+	table = Table(10, 14)
 	wallsNum = 4
-	t.printTable()
-	t.createPlayers(wallsNum)
-	playerX = t.playerX
-	playerO = t.playerO
+	table.printTable()
+	table.createPlayers(wallsNum)
+	playerX = table.playerX
+	playerO = table.playerO
 	playerX.createPawn(4, 4, 1)
 	playerX.createPawn(7, 4, 2)
 	playerO.createPawn(4, 10, 1)
 	playerO.createPawn(7, 10, 2)
-	t.printTable()
+	table.printTable()
 	#t.players[2].movePlayer(7, 4)
-	t.printTable()
+	table.printTable()
 
 	#possible_states = t.playerX.getFigureByNumber(1).getAllPossibleNextStates()
 	#for i in range(0, len(possible_states)):
 	#	print(f'\n\nStanje {i}:')
 	#	possible_states[i].printTable()
+
+	#next_state_minmax = table.calculateNextMoveMinMax(3, -999999, 999999, True, 1)
+	#next_state_minmax[1].printTable()
+
+	#next_state_minmax = next_state_minmax[1].calculateNextMoveMinMax(2, -999999, 999999, True, 1)
+	#next_state_minmax[1].printTable()
 	
 
-	currentPlayer = t.playerX
-	while(t.isGameFinished() is not True):
-		currentPlayer.play()
-		currentPlayer = t.playerO if currentPlayer == t.playerX else t.playerX
+	currentPlayer = table.playerX
+	while(table.isGameFinished() is not True):
+		isComputer = True if (currentPlayer == table.playerX and chosenSign == 1 or currentPlayer == table.playerO and chosenSign == 2) else False
+		currentPlayer.play(isComputer)
+		currentPlayer = table.playerO if currentPlayer == table.playerX else table.playerX
 
 

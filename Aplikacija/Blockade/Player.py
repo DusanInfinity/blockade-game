@@ -1,4 +1,5 @@
 from Enums import PlayStatus
+from Enums import FieldType
 from Pawn import Pawn
 
 class Player:
@@ -32,7 +33,50 @@ class Player:
 					return True
 		return False
 
-	def play(self):
+	def play(self, isComputer):
+		if isComputer:
+			self.computerPlay()
+		else:
+			self.humanPlay()
+
+
+	def computerPlay(self):
+		maximizingPlayer = True if self.type == FieldType.X else False
+
+		figureNum = 1
+		next_move = self.board.calculateNextMoveMinMax(3, -999999, 999999, maximizingPlayer, figureNum)
+
+		if next_move[1] == self.board or next_move[1] == None:
+			figureNum = 2
+			next_move = self.board.calculateNextMoveMinMax(3, -999999, 999999, maximizingPlayer, figureNum)
+
+		chosenPawnInNewState = next_move[1].playerX.getFigureByNumber(figureNum) if maximizingPlayer == True else next_move[1].playerO.getFigureByNumber(figureNum)
+		newPos = (chosenPawnInNewState.row, chosenPawnInNewState.column)
+
+		pawn = self.getFigureByNumber(figureNum)
+
+		status = PlayStatus.START
+		if pawn.movePawn(newPos[0], newPos[1]) != True:
+			print(f'Racunar nije pronasao validan potez! ({newPos[0]}, {newPos[0]})')
+			return
+
+		status = PlayStatus.MOVED
+
+		if self.remainingWalls > 0:
+			status = PlayStatus.PLACING_WALL
+			i = 3
+			j = 3
+			color = 'p' # ili 'z'
+			if self.board.putWallOnPosition(color, i, j) != True:
+				print(f'Racunar nije pronasao validnu poziciju za zid! ({color}, ({i}, {j}))')
+				return
+
+		status = PlayStatus.WALL_PLACED
+		self.board.printTable()
+
+
+
+	def humanPlay(self):
 		chosenPawn = self.choosePawn()
 		pawn = self.pawns[chosenPawn-1]
 		status = PlayStatus.START

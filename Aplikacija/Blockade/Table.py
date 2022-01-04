@@ -3,6 +3,7 @@ from Enums import FieldType
 from Player import Player
 from Pawn import Pawn
 import copy
+import random
 
 class Table:
 	fieldMarks = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] + list((chr(i) for i in range(65, 84))) # Brojevi(9) + 17 slova => 28 karaktera
@@ -168,6 +169,13 @@ class Table:
 		return abs(node.i - end.i) + abs(node.j - end.j)
 
 
+	def getGameWinner(self):
+		if self.playerX.isWinner(self.playerO):
+			return self.playerX
+		elif self.playerO.isWinner(self.playerX):
+			return self.playerO
+		return None
+
 
 	def isGameFinished(self):
 		if self.playerX.isWinner(self.playerO):
@@ -243,4 +251,46 @@ class Table:
 		fields = newState.getFieldsForWall(i, j, color)
 		newState.placeWallsInFields(fields, color)
 		return newState
+
+	def calculateNextMoveMinMax(self, depth, alpha, beta, maximizingPlayer, figureNum):
+		winner = self.getGameWinner()
+		if depth == 0 or winner != None:
+			heuristic = self.calculateMinMaxHeuristic(maximizingPlayer, winner)
+			return (heuristic, self) # Ovde ide funkcija heuristike
+		states = [] 
+		out_state = None
+		if maximizingPlayer:
+			states = self.playerX.getFigureByNumber(figureNum).getAllPossibleNextStates();
+			maxEval = -999999
+			for s in states:
+				eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, False, figureNum)
+				maxEval = max(maxEval, eval[0])
+				if maxEval == eval[0]:
+					out_state = copy.deepcopy(s)
+				alpha = max(alpha, eval[0])
+				if beta <= alpha:
+					break
+			return (maxEval, out_state)
+		else:
+			states = self.playerO.getFigureByNumber(figureNum).getAllPossibleNextStates();
+			minEval = 999999
+			for s in states:
+				eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, True, figureNum)
+				minEval = min(minEval, eval[0])
+				if minEval == eval[0]:
+					out_state = copy.deepcopy(s)
+				beta = min(beta, eval[0])
+				if beta <= alpha:
+					break
+			return (minEval, out_state)
+
+	def calculateMinMaxHeuristic(self, maximizingPlayer, winner):
+		heuristic = 0
+		if winner == self.playerX:
+			heuristic = 999999
+		elif winner == self.playerO:
+			heuristic = -999999
+		else:
+			heuristic = 1 if maximizingPlayer == True else -1
+		return heuristic
 
