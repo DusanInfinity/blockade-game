@@ -69,8 +69,9 @@ if not debugMode:
 	table.printTable()
 
 	currentPlayer = table.playerX
+	humanPlayer = table.playerX if chosenSign == 1 else table.playerO
 	while(table.isGameFinished() is not True):
-		isComputer = True if (currentPlayer == table.playerX and chosenSign == 1 or currentPlayer == table.playerO and chosenSign == 2) else False
+		isComputer = True if currentPlayer != humanPlayer else False
 		currentPlayer.play(isComputer)
 		currentPlayer = table.playerO if currentPlayer == table.playerX else table.playerX
 
@@ -104,8 +105,9 @@ else:
 	
 
 	currentPlayer = table.playerX
+	humanPlayer = table.playerX if chosenSign == 1 else table.playerO
 	while(table.isGameFinished() is not True):
-		isComputer = True if (currentPlayer == table.playerX and chosenSign == 1 or currentPlayer == table.playerO and chosenSign == 2) else False
+		isComputer = True if currentPlayer != humanPlayer else False
 		currentPlayer.play(isComputer)
 		currentPlayer = table.playerO if currentPlayer == table.playerX else table.playerX
 
