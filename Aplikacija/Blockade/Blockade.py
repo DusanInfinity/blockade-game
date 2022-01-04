@@ -78,16 +78,16 @@ if not debugMode:
 
 else:
 	chosenSign = 1
-	table = Table(10, 14)
+	table = Table(11, 14)
 	wallsNum = 4
 	table.printTable()
 	table.createPlayers(wallsNum)
 	playerX = table.playerX
 	playerO = table.playerO
 	playerX.createPawn(4, 4, 1)
-	playerX.createPawn(7, 4, 2)
-	playerO.createPawn(4, 10, 1)
-	playerO.createPawn(7, 10, 2)
+	playerX.createPawn(8, 4, 2)
+	playerO.createPawn(4, 11, 1)
+	playerO.createPawn(8, 11, 2)
 	table.printTable()
 	#t.players[2].movePlayer(7, 4)
 	table.printTable()

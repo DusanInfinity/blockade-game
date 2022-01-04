@@ -113,6 +113,7 @@ class Table:
 					print("[GRESKA] Zid zatvara put jednom od pijuna!")
 					return False
 				self.placeWallsInFields(fields, color)
+				print(f'Uspešno ste postavili zid boje \'{color}\' na poziciju ({i}, {j}).')
 				return True
 		else:
 			print("[GRESKA] Ne možete postaviti zid na tu poziciju!")
