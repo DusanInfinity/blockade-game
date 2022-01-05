@@ -104,9 +104,10 @@ class Table:
 	def validateWallPosition(self, color, i, j, fields):
 		if fields[0].isWall() or fields[1].isWall() or fields[0].areWallsCrossing(color):
 			return False
-		newState = self.placeWallInNewState(color, i, j)
-		if newState.isWallClosingPath(): # provera da li je put zatvoren
-			return False
+		if fields[0].getNumberOfWallsTouching(color) > 2:
+			newState = self.placeWallInNewState(color, i, j)
+			if newState.isWallClosingPath(): # provera da li je put zatvoren
+				return False
 		return True
 		
 	def putWallOnPosition(self, color, i, j):
@@ -115,11 +116,12 @@ class Table:
 			if fields[0].isWall() or fields[1].isWall() or fields[0].areWallsCrossing(color):
 				print("[GRESKA] Već postoji zid na toj poziciji!")
 			else:
-				newState = self.placeWallInNewState(color, i, j)
-				# provera da li je put zatvoren
-				if newState.isWallClosingPath():
-					print("[GRESKA] Zid zatvara put jednom od pijuna!")
-					return False
+				if fields[0].getNumberOfWallsTouching(color) > 2: 
+					newState = self.placeWallInNewState(color, i, j)
+					# provera da li je put zatvoren
+					if newState.isWallClosingPath():
+						print("[GRESKA] Zid zatvara put jednom od pijuna!")
+						return False
 				self.placeWallsInFields(fields, color)
 				print(f'Uspešno ste postavili zid boje \'{color}\' na poziciju ({i}, {j}).')
 				return True

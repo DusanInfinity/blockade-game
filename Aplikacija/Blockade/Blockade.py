@@ -77,7 +77,7 @@ if not debugMode:
 
 
 else:
-	chosenSign = 1
+	chosenSign = 2
 	table = Table(11, 14)
 	wallsNum = 4
 	table.printTable()

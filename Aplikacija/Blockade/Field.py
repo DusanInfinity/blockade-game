@@ -72,3 +72,41 @@ class Field:
 		for potez in possible_moves:
 			possible_fields.append(self.board.getFieldByRowAndColumn(potez[0], potez[1]))		
 		return possible_fields
+
+	def getNumberOfWallsTouching(self, color):
+		touchingNum = 0
+		if color == 'p': # horizontalni
+			if (self.j < 2 #granica za levu stranu
+			or self.board.matrix[self.i - 1][self.j - 1].isWall() # levi gornji
+			or self.board.matrix[self.i][self.j - 2].isWall() # levi srednji
+			or self.board.matrix[self.i + 1][self.j - 1].isWall()): # levi donji
+				touchingNum += 1
+
+			if (self.board.matrix[self.i - 1][self.j + 1].isWall() # srednji gornji
+			or self.board.matrix[self.i + 1][self.j + 1].isWall()): # srednji donji
+				touchingNum += 1
+
+			if (self.j + 4 >= self.board.matrixColumns #granica za desnu stranu
+			or self.board.matrix[self.i - 1][self.j + 3].isWall() # desni gornji
+			or self.board.matrix[self.i][self.j + 4].isWall() # desni srednji
+			or self.board.matrix[self.i + 1][self.j + 3].isWall()): # desni donji
+				touchingNum += 1
+	
+		elif color == 'z': # vertikalni
+			if (self.i < 2 #granica za gornju stranu
+			or self.board.matrix[self.i - 1][self.j - 1].isWall() # gornji levi
+			or self.board.matrix[self.i - 2][self.j].isWall() # gornji srednji1
+			or self.board.matrix[self.i - 1][self.j + 1].isWall()): # gornji desni
+				touchingNum += 1
+
+			if (self.board.matrix[self.i + 1][self.j - 1].isWall() # srednji levi
+			or self.board.matrix[self.i + 1][self.j + 1].isWall()): # srednji desni
+				touchingNum += 1
+
+			if (self.i + 4 >= self.board.matrixRows #granica za donju stranu
+			or self.board.matrix[self.i + 3][self.j - 1].isWall() # donji levi
+			or self.board.matrix[self.i + 4][self.j].isWall() # donji srednji
+			or self.board.matrix[self.i + 3][self.j + 1].isWall()): # donji desni
+				touchingNum += 1
+
+		return touchingNum
