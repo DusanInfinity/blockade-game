@@ -1,6 +1,7 @@
 from Enums import PlayStatus
 from Enums import FieldType
 from Pawn import Pawn
+import random
 
 class Player:
 	def __init__(self, type, remainingWalls, board):
@@ -64,14 +65,18 @@ class Player:
 
 		if self.remainingWalls > 0:
 			status = PlayStatus.PLACING_WALL
-			i = 3
-			j = 3
-			color = 'p' # ili 'z'
+			wallPositions = self.board.getPossibleWallPositions()
+			print(f'[DEBUG] Broj mogucih pozicija za zidove: {len(wallPositions)}');
+			chosenState = wallPositions[random.randint(0, len(wallPositions) - 1)] # TO-DO Heuristika/Algoritam za izbor najbolje pozicije za zid
+			color = chosenState[0]
+			i = chosenState[1]
+			j = chosenState[2]
 			if self.board.putWallOnPosition(color, i, j) != True:
 				print(f'Racunar nije pronasao validnu poziciju za zid! ({color}, ({i}, {j}))')
 				return
+			status = PlayStatus.WALL_PLACED
+			self.remainingWalls -= 1
 
-		status = PlayStatus.WALL_PLACED
 		self.board.printTable()
 
 

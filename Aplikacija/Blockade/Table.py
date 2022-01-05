@@ -100,6 +100,14 @@ class Table:
 	def placeWallsInFields(self, fields, color):
 		for f in fields:
 			f.setWall(color)
+
+	def validateWallPosition(self, color, i, j, fields):
+		if fields[0].isWall() or fields[1].isWall() or fields[0].areWallsCrossing(color):
+			return False
+		newState = self.placeWallInNewState(color, i, j)
+		if newState.isWallClosingPath(): # provera da li je put zatvoren
+			return False
+		return True
 		
 	def putWallOnPosition(self, color, i, j):
 		fields = self.getFieldsForWall(i, j, color)
@@ -294,4 +302,27 @@ class Table:
 		else:
 			heuristic = 1 if maximizingPlayer == True else -1
 		return heuristic
+
+
+	def getPossibleWallPositions(self):
+		possible_moves = []
+
+		for color in ['z', 'p']:
+			for i in range(1, self.n):
+				for j in range(1, self.m):
+					wallFields = self.getFieldsForWall(i, j, color)
+					if wallFields != None and self.validateWallPosition(color, i, j, wallFields):
+						possible_moves.append((color, i, j))
+
+		return possible_moves
+
+	def getAllPossibleWallNextStates(self):
+		possible_moves = self.getPossibleWallPositions()
+		statesAndMoves = []
+		for move in possible_moves:
+			color = move[0]
+			i = move[1]
+			j = move[2]
+			statesAndMoves.append((self.placeWallInNewState(color, i, j), move))
+		return statesAndMoves
 
