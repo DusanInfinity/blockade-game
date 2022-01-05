@@ -30,19 +30,6 @@ class Pawn:
         self.setPawnOnTable()
 
 
-    def validateMove(self, x, y): # bez printa
-        if x == self.row and y == self.column:
-            return False
-        if x < 1 or x > self.board.n: #[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}. Vi ste uneli: ' + str(i))
-            return False
-        if y < 1 or y > self.board.m: #[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}. Vi ste uneli: ' + str(j))
-            return False
-        if (not self.validateMoveForBoardDimensions(x, y) or
-            not self.validateMoveDirection(x, y) or
-            not self.validateMoveForWalls(x, y) or
-            not self.validateMoveForOtherPawns(x, y)):
-            return False
-        return True
 
     def movePawn(self, x, y):
         if x == self.row and y == self.column:
@@ -58,8 +45,15 @@ class Pawn:
             print("[GRESKA] Uneta pozicija nije u granicama table!")
             return False
         if not self.validateMoveDirection(x, y):
+            if self.validateMoveForOneFieldMove(x, y): # slucaj za potez za jedno polje, pritom da je to ciljno polje
+                self.updatePawnCoordinates(x, y)
+                return True
             print("[GRESKA] Nevalidne kordinate nove pozicije. Možete ići 2 polja horizontalno ili vertikalno i 1 polje dijagonalno!")
             return False
+        if self.validateMoveDirection(x, y):
+            if self.validateMoveForOneFieldMove(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2): # slucaj za potez za dva polja, pritom da je ciljno polje izmedju sadasnjeg i poteza koji odaberemo
+                self.updatePawnCoordinates(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2)
+                return True
         if not self.validateMoveForWalls(x, y):
             print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!")
             return False
@@ -83,6 +77,17 @@ class Pawn:
             return False
         return True
 
+
+    def validateMoveForOneFieldMove(self, x, y):
+        if self.row == x or self.column == y:
+            if abs(self.row - x) + abs(self.column - y) == 1:
+                all_pawns = self.board.playerO.pawns + self.board.playerX.pawns
+                for p in all_pawns:
+                    if p.player.type != self.player.type and x == p.startingRow and y == p.startingColumn: # ako je krajnje polje
+                        if self.validateMoveForWalls(x, y):
+                            return True
+            else:
+                return False
 
     def validateMoveDirection(self, x, y):
         # za W A S D
@@ -226,12 +231,39 @@ class Pawn:
                 return True
         return False
  
+
+
+    
+    def validateMove(self, x, y): # bez printa
+        if x == self.row and y == self.column:
+            return False
+        if x < 1 or x > self.board.n: #[GRESKA] Minimalna pozicija za vrstu je 1, maksimalna {self.board.n}. Vi ste uneli: ' + str(i))
+            return False
+        if y < 1 or y > self.board.m: #[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}. Vi ste uneli: ' + str(j))
+            return False
+        if not self.validateMoveForBoardDimensions(x, y):
+            return False
+        if not self.validateMoveDirection(x, y):
+            if self.validateMoveForOneFieldMove(x, y):
+                return True
+            return False
+        if self.validateMoveDirection(x, y):
+            if self.validateMoveForOneFieldMove(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2): # slucaj za potez za dva polja, pritom da je ciljno polje izmedju sadasnjeg i poteza koji odaberemo
+                return True
+        if not self.validateMoveForWalls(x, y):
+            return False
+        if not self.validateMoveForOtherPawns(x, y):
+            return False
+        return True
+
     def getPossibleMoves(self):
         possible_moves = []
 
-        hv = [(-1, 0), (-2, 0), (1, 0), (2, 0), (0, -1), (0, -2), (0, 1), (0, 2)]
+        hv = [(-2, 0), (2, 0), (0, -2), (0, 2)]
         diagonal = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-        moves = hv + diagonal
+        hv_1 = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        moves = hv + diagonal + hv_1
+
 
         for move in moves:
             x = move[0] + self.row
