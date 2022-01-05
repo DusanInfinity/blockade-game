@@ -12,6 +12,7 @@ class Field:
 		type = self.type
 		return "X" if type == FieldType.X else "O" if type == FieldType.O else " | " if type == FieldType.VERTICAL_WALL_EMPTY else "---" if type == FieldType.HORIZONTAL_WALL_EMPTY else " ǁ " if type == FieldType.VERTICAL_WALL_FULL else "===" if type == FieldType.HORIZONTAL_WALL_FULL else " ";
 
+
 	def isEmptyWallField(self):
 		if self.type == FieldType.HORIZONTAL_WALL_EMPTY or self.type == FieldType.VERTICAL_WALL_EMPTY:
 			return True
@@ -57,14 +58,14 @@ class Field:
 		self.type = type
 	
 
-	def getAllPossibleMovementFields(self):
+	def getAllPossibleMovementFields(self, type):
 		if not self.isFieldForPlayer():
 			return []
 
 		row = int(self.i / 2) + 1
 		column = int(self.j / 2) + 1
 
-		pawn = Pawn(None, 1, row, column, self.board) # virtuelni pijun - nema ga na tabli, pruza pristup funkcijama klase Pawn
+		pawn = Pawn(self.board.getPlayerByType(type), 1, row, column, self.board) # virtuelni pijun - nema ga na tabli, pruza pristup funkcijama klase Pawn
 		possible_moves = pawn.getPossibleMoves()
 
 		possible_fields = []

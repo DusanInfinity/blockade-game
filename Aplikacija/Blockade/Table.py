@@ -81,14 +81,14 @@ class Table:
 		row = row - 1
 		column = column -1
 		if color == 'p':
-			if row == 0:
+			if row == 0: #granicni gornji slucaj
 				return None
 			try:
 				return [self.matrix[row * 2 - 1][column * 2], self.matrix[row * 2 - 1][column * 2 + 2]]
 			except:
 				return None
 		elif color == 'z':
-			if column == 0:
+			if column == self.m - 1: #granicni desni slucaj
 				return None
 			try:
 				return [self.matrix[row * 2][column * 2 + 1], self.matrix[row * 2 + 2][column * 2 + 1]]
@@ -154,7 +154,7 @@ class Table:
 					node = next_node
 			if node == end:
 				return True
-			for m in node.getAllPossibleMovementFields():			   
+			for m in node.getAllPossibleMovementFields(start.type): #prenosim type zbog kasnije provere u validateMoveForOtherPawns		   
 				if m not in open_set and m not in closed_set:
 					open_set.add(m)
 					g[m] = g[node] + 1
@@ -261,7 +261,7 @@ class Table:
 		states = [] 
 		out_state = None
 		if maximizingPlayer:
-			states = self.playerX.getFigureByNumber(figureNum).getAllPossibleNextStates();
+			states = self.playerX.getFigureByNumber(figureNum).getAllPossibleNextStates()
 			maxEval = -999999
 			for s in states:
 				eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, False, figureNum)
@@ -273,7 +273,7 @@ class Table:
 					break
 			return (maxEval, out_state)
 		else:
-			states = self.playerO.getFigureByNumber(figureNum).getAllPossibleNextStates();
+			states = self.playerO.getFigureByNumber(figureNum).getAllPossibleNextStates()
 			minEval = 999999
 			for s in states:
 				eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, True, figureNum)

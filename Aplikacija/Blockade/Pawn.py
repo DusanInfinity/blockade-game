@@ -30,7 +30,6 @@ class Pawn:
         self.setPawnOnTable()
 
 
-    # TO-DO ovo je losa praksa, dve funkcije rade istu stvar, mozemo da zaboravimo neku proveru u nekoj
     def validateMove(self, x, y): # bez printa
         if x == self.row and y == self.column:
             return False
@@ -38,9 +37,9 @@ class Pawn:
             return False
         if y < 1 or y > self.board.m: #[GRESKA] Minimalna pozicija za kolonu je 1, maksimalna {self.board.m}. Vi ste uneli: ' + str(j))
             return False
-        if (not self.validateMoveForWalls(x, y) or
+        if (not self.validateMoveForBoardDimensions(x, y) or
             not self.validateMoveDirection(x, y) or
-            not self.validateMoveForBoardDimensions(x, y) or
+            not self.validateMoveForWalls(x, y) or
             not self.validateMoveForOtherPawns(x, y)):
             return False
         return True
@@ -59,20 +58,28 @@ class Pawn:
             print("[GRESKA] Uneta pozicija nije u granicama table!")
             return False
         if not self.validateMoveDirection(x, y):
-            print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju!")
-            return False
-        if not self.validateMoveForOtherPawns(x, y):
-            print("[GRESKA] Na unetoj poziciji se već nalazi pijun!")
+            print("[GRESKA] Nevalidne kordinate nove pozicije. Možete ići 2 polja horizontalno ili vertikalno i 1 polje dijagonalno!")
             return False
         if not self.validateMoveForWalls(x, y):
             print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!")
+            return False
+        if not self.validateMoveForOtherPawns(x, y):
+            print("[GRESKA] Na unetoj poziciji se već nalazi pijun!")
+            if self.row == x or self.column == y: # samo ako ide W A S D, treba da se radi provera
+                if not self.validateMoveIfPawnOnNeighborField(x, y): #proverava susedno polje daa li moze da stavi pijuna
+                    self.updatePawnCoordinates(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2)
+                    print(f'Uspešno ste pomerili pijuna na poziciju ({self.row}, {self.column}).')
+                    return True
+                print("[GRESKA] Pijun se ne može pomeriti za jedno polje jer se tu nalazi pijun!")
             return False
         self.updatePawnCoordinates(x, y)
         print(f'Uspešno ste pomerili pijuna na poziciju ({x}, {y}).')
         return True
 
+  
+
     def validateMoveForBoardDimensions(self, x, y):
-        if x < 0 or x > self.board.n or y < 0 or y > self.board.m:
+        if x < 1 or x > self.board.n or y < 1 or y > self.board.m:
             return False
         return True
 
@@ -80,7 +87,7 @@ class Pawn:
     def validateMoveDirection(self, x, y):
         # za W A S D
         if self.row == x or self.column == y:
-            if abs(self.row - x) + abs(self.column - y) <= 2:
+            if abs(self.row - x) + abs(self.column - y) == 2:
                 return True
             else:
                 return False
@@ -202,15 +209,22 @@ class Pawn:
     
 
     def validateMoveForOtherPawns(self, x, y):
-        enemy = self.board.playerO if self.player == self.board.playerX else self.board.playerX
-        for p in enemy.pawns:
-            if x == p.startingRow and y == p.startingColumn: 
+        all_pawns = self.board.playerO.pawns + self.board.playerX.pawns
+        for p in all_pawns:
+            if p.player.type != self.player.type and x == p.startingRow and y == p.startingColumn: 
                 # moze da ode na to polje zato sto je to zavrsno polje i ignorisace tog igraca
                 return True
             if x == p.row and y == p.column:
+                # kad je drugi igrac na tom polju, treba da se pawn prebaci na polje izmedju sadasnjeg i odredisnog
                 return False
-        
         return True
+
+    def validateMoveIfPawnOnNeighborField(self, x, y):
+        all_pawns = self.board.playerO.pawns + self.board.playerX.pawns
+        for p in all_pawns:
+            if self.row + (x - self.row) // 2 == p.row and self.column + (y - self.column) // 2 == p.column:
+                return True
+        return False
  
     def getPossibleMoves(self):
         possible_moves = []
