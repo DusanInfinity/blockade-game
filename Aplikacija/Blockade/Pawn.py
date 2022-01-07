@@ -45,32 +45,60 @@ class Pawn:
             print("[GRESKA] Uneta pozicija nije u granicama table!")
             return False
         if not self.validateMoveDirection(x, y):
-            if self.validateMoveForOneFieldMove(x, y): # slucaj za potez za jedno polje, pritom da je to ciljno polje
-                self.updatePawnCoordinates(x, y)
-                return True
             print("[GRESKA] Nevalidne kordinate nove pozicije. Možete ići 2 polja horizontalno ili vertikalno i 1 polje dijagonalno!")
             return False
-        if self.validateMoveDirection(x, y):
-            if self.validateMoveForOneFieldMove(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2): # slucaj za potez za dva polja, pritom da je ciljno polje izmedju sadasnjeg i poteza koji odaberemo
-                self.updatePawnCoordinates(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2)
-                return True
         if not self.validateMoveForWalls(x, y):
             print("[GRESKA] Ne možete pomeriti pijuna na zadatu poziciju zbog zida!")
             return False
         if not self.validateMoveForOtherPawns(x, y):
             print("[GRESKA] Na unetoj poziciji se već nalazi pijun!")
-            if self.row == x or self.column == y: # samo ako ide W A S D, treba da se radi provera
-                if not self.validateMoveIfPawnOnNeighborField(x, y): #proverava susedno polje daa li moze da stavi pijuna
-                    self.updatePawnCoordinates(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2)
-                    print(f'Uspešno ste pomerili pijuna na poziciju ({self.row}, {self.column}).')
-                    return True
-                print("[GRESKA] Pijun se ne može pomeriti za jedno polje jer se tu nalazi pijun!")
+            return False
+        if not self.validateMoveForOneFieldMove(x, y):
+            print("[GRESKA] Ne možete se pomeriti za jedno polje jer se pijun ne nalazi na 2 polje od vas!")
             return False
         self.updatePawnCoordinates(x, y)
         print(f'Uspešno ste pomerili pijuna na poziciju ({x}, {y}).')
         return True
 
   
+    def validateMoveForOneFieldMove(self, x, y):
+        if self.row == x or self.column == y: # W A S D
+            if abs(self.row - x) + abs(self.column - y) == 1: # ako ide samo za po jedno polje
+                # if x == self.board.n or y == self.board.m or x == 0 or y == 0:
+                #     return True
+                if self.checkIfFieldIsFinishField(x, y):
+                    return True
+                if self.row < x: #provera dole
+                    if not self.checkForPawn(x + 1, y):
+                        return True
+                elif self.row > x: #gore
+                    if not self.checkForPawn(x - 1, y):
+                        return True
+                elif self.column < y: #desno
+                    if not self.checkForPawn(x, y + 1):
+                        return True
+                elif self.column > y: #levo
+                    if not self.checkForPawn(x, y - 1):
+                        return True
+            else:
+                return True
+        elif abs(self.row - x) == abs(self.column - y) and abs(self.row - x) == 1:
+            return True
+        return False
+    
+    def checkIfFieldIsFinishField(self, x, y):
+        all_pawns = self.board.playerO.pawns + self.board.playerX.pawns
+        for p in all_pawns:
+            if p.player.type != self.player.type and x == p.startingRow and y == p.startingColumn: 
+                return True
+        return False
+
+    def checkForPawn(self, x, y):
+        all_pawns = self.board.playerO.pawns + self.board.playerX.pawns
+        for p in all_pawns:
+            if x == p.row and y == p.column:
+                return False
+        return True
 
     def validateMoveForBoardDimensions(self, x, y):
         if x < 1 or x > self.board.n or y < 1 or y > self.board.m:
@@ -78,21 +106,10 @@ class Pawn:
         return True
 
 
-    def validateMoveForOneFieldMove(self, x, y):
-        if self.row == x or self.column == y:
-            if abs(self.row - x) + abs(self.column - y) == 1:
-                all_pawns = self.board.playerO.pawns + self.board.playerX.pawns
-                for p in all_pawns:
-                    if p.player.type != self.player.type and x == p.startingRow and y == p.startingColumn: # ako je krajnje polje
-                        if self.validateMoveForWalls(x, y):
-                            return True
-            else:
-                return False
-
     def validateMoveDirection(self, x, y):
         # za W A S D
         if self.row == x or self.column == y:
-            if abs(self.row - x) + abs(self.column - y) == 2:
+            if abs(self.row - x) + abs(self.column - y) <= 2:
                 return True
             else:
                 return False
@@ -223,13 +240,6 @@ class Pawn:
                 # kad je drugi igrac na tom polju, treba da se pawn prebaci na polje izmedju sadasnjeg i odredisnog
                 return False
         return True
-
-    def validateMoveIfPawnOnNeighborField(self, x, y):
-        all_pawns = self.board.playerO.pawns + self.board.playerX.pawns
-        for p in all_pawns:
-            if self.row + (x - self.row) // 2 == p.row and self.column + (y - self.column) // 2 == p.column:
-                return True
-        return False
  
 
 
@@ -244,15 +254,12 @@ class Pawn:
         if not self.validateMoveForBoardDimensions(x, y):
             return False
         if not self.validateMoveDirection(x, y):
-            if self.validateMoveForOneFieldMove(x, y):
-                return True
             return False
-        if self.validateMoveDirection(x, y):
-            if self.validateMoveForOneFieldMove(self.row + (x - self.row) // 2, self.column + (y - self.column) // 2): # slucaj za potez za dva polja, pritom da je ciljno polje izmedju sadasnjeg i poteza koji odaberemo
-                return True
         if not self.validateMoveForWalls(x, y):
             return False
         if not self.validateMoveForOtherPawns(x, y):
+            return False
+        if not self.validateMoveForOneFieldMove(x, y):
             return False
         return True
 
