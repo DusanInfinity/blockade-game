@@ -38,8 +38,7 @@ class Player:
 		if isComputer:
 			self.computerPlay()
 		else:
-			self.computerPlay()
-			#self.humanPlay()
+			self.humanPlay()
 
 
 	def computerPlay(self):
