@@ -67,7 +67,7 @@ class Player:
 			status = PlayStatus.PLACING_WALL
 			wallPositions = self.board.getPossibleWallPositions()
 			print(f'[DEBUG] Broj mogucih pozicija za zidove: {len(wallPositions)}');
-			chosenState = wallPositions[random.randint(0, len(wallPositions) - 1)] # TO-DO Heuristika/Algoritam za izbor najbolje pozicije za zid
+			chosenState = self.board.chooseNextWallPosition(maximizingPlayer)#wallPositions[random.randint(0, len(wallPositions) - 1)]
 			color = chosenState[0]
 			i = chosenState[1]
 			j = chosenState[2]
