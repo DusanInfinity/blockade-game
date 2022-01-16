@@ -267,7 +267,7 @@ class Table:
 	def calculateNextMoveMinMax(self, depth, alpha, beta, maximizingPlayer, figureNum):
 		winner = self.getGameWinner()
 		if depth == 0 or winner != None:
-			heuristic = self.calculateMinMaxHeuristic(maximizingPlayer, winner)
+			heuristic = self.calculateMinMaxHeuristic(winner)
 			return (heuristic, self) # Ovde ide funkcija heuristike
 		states = [] 
 		out_state = None
@@ -296,32 +296,32 @@ class Table:
 					break
 			return (minEval, out_state)
 
-	def calculateMinMaxHeuristic(self, maximizingPlayer, winner):
+	def calculateMinMaxHeuristic(self, winner):
 		heuristic = 0
 		if winner == self.playerX:
-			heuristic = 999999
+			heuristic = 9999
 		elif winner == self.playerO:
-			heuristic = -999999
+			heuristic = -9999
 		else:
 			# Maximizing player - X
 			for p in self.playerX.pawns:
 				playerField = self.getFieldByRowAndColumn(p.row, p.column)
-				smallestDistance = 999
+				smallestDistance = 100
 				for ep in self.playerO.pawns:
 					distance = self.calculateDistanceBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn))
 					if distance < smallestDistance:
 						smallestDistance = distance
-				heuristic += 999/smallestDistance
+				heuristic += 100/smallestDistance
 
 			# Minimizing player - O
 			for p in self.playerO.pawns:
 				playerField = self.getFieldByRowAndColumn(p.row, p.column)
-				smallestDistance = 999
+				smallestDistance = 100
 				for ep in self.playerX.pawns:
 					distance = self.calculateDistanceBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn))
 					if distance < smallestDistance:
 						smallestDistance = distance
-				heuristic -= 999/smallestDistance
+				heuristic -= 100/smallestDistance
 
 		return heuristic
 
