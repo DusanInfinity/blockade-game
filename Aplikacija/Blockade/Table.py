@@ -177,8 +177,10 @@ class Table:
 		return -1
 	
 
-	def calculateHeuristic(self, node, end):
-		return abs(node.i - end.i) + abs(node.j - end.j)
+	def calculateHeuristic(self, node, end): # Manhattan dijagonalna heuristika
+		dx = abs(node.i - end.i)
+		dy = abs(node.j - end.j)
+		return 2 * (dx + dy) - 3 * min(dx, dy); # D = 2(gore/dole/levo/desno), D2 = 1 (dijagonala)
 
 
 	def getGameWinner(self):
@@ -264,40 +266,57 @@ class Table:
 		newState.placeWallsInFields(fields, color)
 		return newState
 
-	def calculateNextMoveMinMax(self, depth, alpha, beta, maximizingPlayer, figureNum):
+	def calculateNextMoveMinMax(self, depth, alpha, beta, maximizingPlayer, computerPlayer):
 		winner = self.getGameWinner()
 		if depth == 0 or winner != None:
-			heuristic = self.calculateMinMaxHeuristic()
+			heuristic = self.calculateMinMaxHeuristic(winner, depth, computerPlayer)
 			return (heuristic, self) # Ovde ide funkcija heuristike
 		states = [] 
 		out_state = None
 		if maximizingPlayer:
-			states = self.playerX.getFigureByNumber(figureNum).getAllPossibleNextStates()
+			# Izbor maximizing pijuna
+			maximizingPawn = None
 			maxEval = -999999
-			for s in states:
-				eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, False, figureNum)
-				maxEval = max(maxEval, eval[0])
-				if maxEval == eval[0]:
-					out_state = copy.deepcopy(s)
-				alpha = max(alpha, eval[0])
-				if beta <= alpha:
-					break
-			return (maxEval, out_state)
+			for p in self.playerX.pawns:
+				states = p.getAllPossibleNextStates()
+				for s in states:
+					eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, False, computerPlayer)
+					maxEval = max(maxEval, eval[0])
+					if maxEval == eval[0]:
+						out_state = copy.deepcopy(s)
+						maximizingPawn = p
+					alpha = max(alpha, eval[0])
+					if beta <= alpha:
+						break
+			return (maxEval, out_state, maximizingPawn)
 		else:
-			states = self.playerO.getFigureByNumber(figureNum).getAllPossibleNextStates()
+			# Izbor minimizing pijuna
 			minEval = 999999
-			for s in states:
-				eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, True, figureNum)
-				minEval = min(minEval, eval[0])
-				if minEval == eval[0]:
-					out_state = copy.deepcopy(s)
-				beta = min(beta, eval[0])
-				if beta <= alpha:
-					break
-			return (minEval, out_state)
+			minimizingPawn = None
+			for p in self.playerO.pawns:
+				states = p.getAllPossibleNextStates()
+				for s in states:
+					eval = s.calculateNextMoveMinMax(depth - 1, alpha, beta, True, computerPlayer)
+					minEval = min(minEval, eval[0])
+					if minEval == eval[0]:
+						out_state = copy.deepcopy(s)
+						minimizingPawn = p
+					beta = min(beta, eval[0])
+					if beta <= alpha:
+						break
+			return (minEval, out_state, minimizingPawn)
 
-	def calculateMinMaxHeuristic(self):
+	def calculateMinMaxHeuristic(self, winner, depth, computerPlayer):
 		heuristic = 0
+		if winner == self.playerX:
+			heuristic = 9999
+			if computerPlayer == True: # computerPlayer = MaximizingPlayer
+				heuristic *= (depth + 1)
+		elif winner == self.playerO:
+			heuristic = -9999
+			if computerPlayer == False: # computerPlayer = MinimizingPlayer
+				heuristic *= (depth + 1)
+
 		# Maximizing player - X
 		for p in self.playerX.pawns:
 			playerField = self.getFieldByRowAndColumn(p.row, p.column)
@@ -352,7 +371,7 @@ class Table:
 			for moveState in statesAndMoves:
 				state = moveState[0]
 				move = moveState[1]
-				heuristic = state.calculateMinMaxHeuristic()
+				heuristic = state.calculateMinMaxHeuristic(None, 0, None)
 				if heuristic > currEval:
 					currEval = heuristic
 					bestMove = move
@@ -361,7 +380,7 @@ class Table:
 			for moveState in statesAndMoves:
 				state = moveState[0]
 				move = moveState[1]
-				heuristic = state.calculateMinMaxHeuristic()
+				heuristic = state.calculateMinMaxHeuristic(None, 0, None)
 				if heuristic < currEval:
 					currEval = heuristic
 					bestMove = move

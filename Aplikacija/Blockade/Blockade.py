@@ -79,7 +79,7 @@ if not debugMode:
 else:
 	chosenSign = 2
 	table = Table(11, 14)
-	wallsNum = 6
+	wallsNum = 9
 	table.printTable()
 	table.createPlayers(wallsNum)
 	playerX = table.playerX

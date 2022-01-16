@@ -269,7 +269,7 @@ class Pawn:
         hv = [(-2, 0), (2, 0), (0, -2), (0, 2)]
         diagonal = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
         hv_1 = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        moves = hv + diagonal + hv_1
+        moves = hv_1 + hv + diagonal
 
 
         for move in moves:
