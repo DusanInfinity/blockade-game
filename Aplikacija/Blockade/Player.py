@@ -45,11 +45,11 @@ class Player:
 		maximizingPlayer = True if self.type == FieldType.X else False
 
 		figureNum = 1
-		next_move = self.board.calculateNextMoveMinMax(5, -999999, 999999, maximizingPlayer, figureNum)
+		next_move = self.board.calculateNextMoveMinMax(3, -999999, 999999, maximizingPlayer, figureNum)
 
 		if next_move[1] == self.board or next_move[1] == None:
 			figureNum = 2
-			next_move = self.board.calculateNextMoveMinMax(5, -999999, 999999, maximizingPlayer, figureNum)
+			next_move = self.board.calculateNextMoveMinMax(3, -999999, 999999, maximizingPlayer, figureNum)
 
 		chosenPawnInNewState = next_move[1].playerX.getFigureByNumber(figureNum) if maximizingPlayer == True else next_move[1].playerO.getFigureByNumber(figureNum)
 		newPos = (chosenPawnInNewState.row, chosenPawnInNewState.column)

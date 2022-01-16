@@ -137,20 +137,20 @@ class Table:
 		for p in self.playerX.pawns:
 			playerField = self.getFieldByRowAndColumn(p.row, p.column)
 			for ep in self.playerO.pawns:
-				if not self.doesPathExistBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+				if self.calculateDistanceBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)) == -1:
 					return True
 		
 		# za O playera
 		for p in self.playerO.pawns:
 			playerField = self.getFieldByRowAndColumn(p.row, p.column)
 			for ep in self.playerX.pawns:
-				if not self.doesPathExistBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)):
+				if self.calculateDistanceBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn)) == -1:
 					return True
 		
 		return False
 
 
-	def doesPathExistBetweenNodes(self, start, end):
+	def calculateDistanceBetweenNodes(self, start, end):
 		found_end = False
 		open_set = set()
 		open_set.add(start)
@@ -163,7 +163,8 @@ class Table:
 				if node is None or g[next_node] + self.calculateHeuristic(next_node, end) < g[node] + self.calculateHeuristic(node, end):
 					node = next_node
 			if node == end:
-				return True
+				found_end = True
+				return g[end]
 			for m in node.getAllPossibleMovementFields(start.type): #prenosim type zbog kasnije provere u validateMoveForOtherPawns		   
 				if m not in open_set and m not in closed_set:
 					open_set.add(m)
@@ -173,7 +174,7 @@ class Table:
 						g[m] = g[node] + 1
 			open_set.remove(node)
 			closed_set.add(node)
-		return False
+		return -1
 	
 
 	def calculateHeuristic(self, node, end):
@@ -302,7 +303,26 @@ class Table:
 		elif winner == self.playerO:
 			heuristic = -999999
 		else:
-			heuristic = 1 if maximizingPlayer == True else -1
+			# Maximizing player - X
+			for p in self.playerX.pawns:
+				playerField = self.getFieldByRowAndColumn(p.row, p.column)
+				smallestDistance = 999
+				for ep in self.playerO.pawns:
+					distance = self.calculateDistanceBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn))
+					if distance < smallestDistance:
+						smallestDistance = distance
+				heuristic += 999/smallestDistance
+
+			# Minimizing player - O
+			for p in self.playerO.pawns:
+				playerField = self.getFieldByRowAndColumn(p.row, p.column)
+				smallestDistance = 999
+				for ep in self.playerX.pawns:
+					distance = self.calculateDistanceBetweenNodes(playerField, self.getFieldByRowAndColumn(ep.startingRow, ep.startingColumn))
+					if distance < smallestDistance:
+						smallestDistance = distance
+				heuristic -= 999/smallestDistance
+
 		return heuristic
 
 
